@@ -53,6 +53,9 @@
                 <button onclick="switchTab('dashboard')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-white bg-brand shadow-inner flex items-center space-x-2.5" data-tab="dashboard">
                     <i class="fa-solid fa-chart-pie w-4 text-center"></i><span>Dashboard & Farol</span>
                 </button>
+                <button onclick="switchTab('fluxo_tfa')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="fluxo_tfa">
+                    <i class="fa-solid fa-route w-4 text-center"></i><span>Fluxo de Operações (TFA)</span>
+                </button>
                 <button onclick="switchTab('projetos')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="projetos">
                     <i class="fa-solid fa-diagram-project w-4 text-center"></i><span>Gestão de Projetos</span>
                 </button>
@@ -185,6 +188,39 @@
                                 <p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. FLUXO DE OPERAÇÕES (TFA) - IMAGEM EM ALTA DEFINIÇÃO -->
+            <section id="tab-fluxo_tfa" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+                                <i class="fa-solid fa-route text-brand"></i>
+                                <span>Fluxograma Operacional (TFA) - Documento Oficial</span>
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Diagrama esquemático oficial sem dados de capacidades ou comprimentos.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="bg-brand text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-brand-dark transition flex items-center space-x-1.5 shadow">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                                <span>Carregar Imagem do Fluxograma (PDF/PNG)</span>
+                                <input type="file" id="fluxoImageInput" accept="image/*,.pdf" onchange="loadFluxoImage(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="fluxoDisplayContainer" class="flex flex-col items-center justify-center bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 p-8 min-h-[500px]">
+                        <div id="fluxoPlaceholder" class="text-center space-y-3">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow mx-auto text-brand text-2xl">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-700 text-sm">Nenhuma imagem carregada do fluxograma</h3>
+                            <p class="text-xs text-slate-500 max-w-md">Clique no botão acima para carregar a imagem em alta definição do fluxograma extraída do documento original.</p>
+                        </div>
+                        <img id="fluxoImagePreview" class="hidden max-w-full h-auto rounded-xl shadow-md border border-slate-200 object-contain max-h-[750px]" alt="Fluxograma Operacional TFA">
                     </div>
                 </div>
             </section>
@@ -426,16 +462,12 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Prazo (dd/mm/aaaa)</label>
-                        <input type="text" id="inputPrazo" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand">
+                        <label class="block font-semibold text-slate-700 mb-1">Prazo (Data Limite)</label>
+                        <input type="date" id="inputPrazo" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Status</label>
-                        <select id="inputStatus" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand">
-                            <option value="Em Andamento">Em Andamento</option>
-                            <option value="Concluído">Concluído</option>
-                            <option value="Atrasado">Atrasado</option>
-                        </select>
+                        <label class="block font-semibold text-slate-700 mb-1">Status (Automático)</label>
+                        <input type="text" id="inputStatusDisplay" disabled class="w-full p-2 border border-slate-200 rounded-lg bg-slate-100 text-slate-600 font-semibold" value="Em Andamento">
                     </div>
                 </div>
                 <div id="extraFields" class="space-y-4"></div>
@@ -453,7 +485,7 @@
     </div>
 
     <div id="projectModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
             <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
                 <h3 id="projectModalTitle" class="font-bold text-sm">Gerenciar Projeto</h3>
                 <button onclick="closeProjectModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -481,13 +513,15 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Equipes Envolvidas</label>
-                        <input type="text" id="projTeams" class="w-full p-2 border border-slate-300 rounded-lg">
+                        <div id="projTeamsContainer" class="grid grid-cols-2 gap-1.5 p-2 border border-slate-300 rounded-lg bg-slate-50 max-h-32 overflow-y-auto">
+                            <!-- Preenchido dinamicamente em ordem alfabética -->
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Cronograma / Prazos</label>
-                        <input type="text" id="projSchedule" placeholder="dd/mm/aaaa" class="w-full p-2 border border-slate-300 rounded-lg">
+                        <label class="block font-semibold text-slate-700 mb-1">Prazo Geral (Cronograma)</label>
+                        <input type="date" id="projSchedule" required class="w-full p-2 border border-slate-300 rounded-lg">
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Custos (R$ / Capex)</label>
@@ -502,20 +536,22 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">% Andamento (Curva S)</label>
-                        <input type="number" id="projProgress" min="0" max="100" value="0" class="w-full p-2 border border-slate-300 rounded-lg">
+                
+                <!-- PLANO DE AÇÃO DO PROJETO (FASES) -->
+                <div class="border-t pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block font-bold text-slate-800">Plano de Ação do Projeto (Fases e Ações)</label>
+                        <span class="text-[11px] text-slate-500">Curva S calculada automaticamente pelas ações</span>
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Status</label>
-                        <select id="projStatus" class="w-full p-2 border border-slate-300 rounded-lg">
-                            <option value="Em Andamento">Em Andamento</option>
-                            <option value="Concluído">Concluído</option>
-                            <option value="Atrasado">Atrasado</option>
-                        </select>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2 bg-slate-50 p-3 rounded-xl border">
+                        <input type="text" id="projActionDesc" placeholder="Descrição da ação/fase..." class="p-2 border border-slate-300 rounded-lg md:col-span-5">
+                        <input type="text" id="projActionResp" placeholder="Responsável..." class="p-2 border border-slate-300 rounded-lg md:col-span-4">
+                        <input type="date" id="projActionPrazo" class="p-2 border border-slate-300 rounded-lg md:col-span-2">
+                        <button type="button" onclick="addProjectAction()" class="bg-brand text-white px-3 py-1.5 rounded-lg font-semibold md:col-span-1 flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <div id="projActionsList" class="space-y-2 max-h-40 overflow-y-auto"></div>
                 </div>
+
                 <div class="border-t pt-3">
                     <label class="block font-semibold text-slate-700 mb-2">Documentação Vinculada ao Projeto</label>
                     <div class="flex gap-2 mb-2">
@@ -568,7 +604,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Prazo Geral</label>
-                        <input type="text" id="sleepPrazo" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg">
+                        <input type="date" id="sleepPrazo" required class="w-full p-2 border border-slate-300 rounded-lg">
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Responsável</label>
@@ -579,7 +615,7 @@
                     <label class="block font-semibold text-slate-700 mb-2">Plano de Ação (Ações Mitigadoras)</label>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
                         <input type="text" id="actionDescInput" placeholder="Descrição da ação..." class="p-2 border border-slate-300 rounded-lg md:col-span-2">
-                        <input type="text" id="actionPrazoInput" placeholder="dd/mm/aaaa" class="p-2 border border-slate-300 rounded-lg">
+                        <input type="date" id="actionPrazoInput" class="p-2 border border-slate-300 rounded-lg">
                         <button type="button" onclick="addSleeplessAction()" class="bg-brand text-white px-3 py-1.5 rounded-lg font-semibold">Adicionar Ação</button>
                     </div>
                     <div id="sleepActionsList" class="space-y-2 text-xs"></div>
@@ -595,8 +631,8 @@
     <!-- SCRIPT DE LÓGICA E DADOS COM SUPABASE -->
     <script>
         // CONFIGURAÇÃO DO SUPABASE (Insira suas chaves aqui)
-        const SUPABASE_URL = 'https://cvqhwndnjutmmofjuosk.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_aKsMVDlWlJjh_nngCxzvdg_E6SC8Xuz';
+        const SUPABASE_URL = 'SUA_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY';
         
         let supabaseClient = null;
         if (window.supabase && SUPABASE_URL !== 'SUA_SUPABASE_URL') {
@@ -613,6 +649,17 @@
             "TFA 3",
             "DRENAGEM FORÇADA",
             "ASPERSÃO"
+        ];
+
+        // Equipes em ordem alfabética obrigatória
+        const TEAMS_LIST = [
+            "Automação",
+            "Correntes",
+            "Elétrica",
+            "Engenharia",
+            "Mecânica",
+            "Operação",
+            "PCM"
         ];
 
         const GLOSSARY_DATA = [
@@ -733,6 +780,7 @@
 
         let currentAttachments = [];
         let currentProjectDocs = [];
+        let currentProjectActions = [];
         let currentSleepActions = [];
         let isMobileLayout = false;
 
@@ -751,17 +799,26 @@
         }
 
         function formatDateBR(dateObj) {
+            if (!dateObj || isNaN(dateObj.getTime())) return '';
             const d = String(dateObj.getDate()).padStart(2, '0');
             const m = String(dateObj.getMonth() + 1).padStart(2, '0');
             const y = dateObj.getFullYear();
             return `${d}/${m}/${y}`;
         }
 
-        function parseDateBR(dateStr) {
-            if (!dateStr || !dateStr.includes('/')) return new Date();
-            const parts = dateStr.split('/');
+        function parseDateISO(isoStr) {
+            if (!isoStr) return new Date();
+            const parts = isoStr.split('-');
             if (parts.length !== 3) return new Date();
-            return new Date(parts[2], parts[1] - 1, parts[0]);
+            return new Date(parts[0], parts[1] - 1, parts[2]);
+        }
+
+        function toISOStringDate(dateObj) {
+            if (!dateObj || isNaN(dateObj.getTime())) return '';
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         }
 
         function populateSelects() {
@@ -772,6 +829,17 @@
                     el.innerHTML = PRODUCTION_SYSTEMS.map(sys => `<option value="${sys}">${sys}</option>`).join('');
                 }
             });
+
+            // Preenche as equipes do projeto em ordem alfabética
+            const teamsContainer = document.getElementById('projTeamsContainer');
+            if (teamsContainer) {
+                teamsContainer.innerHTML = TEAMS_LIST.map(team => `
+                    <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="projTeamCheckbox" value="${team}" class="w-4 h-4 text-brand rounded">
+                        <span>${team}</span>
+                    </label>
+                `).join('');
+            }
         }
 
         function switchTab(tabId) {
@@ -867,6 +935,22 @@
             renderAttachmentPreviews();
         }
 
+        // Função de cálculo automático de status baseado na data limite (prazo)
+        function calculateAutomaticStatus(prazoStr, currentStatus) {
+            if (currentStatus === 'Concluído') return 'Concluído';
+            if (!prazoStr) return 'Em Andamento';
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const target = parseDateISO(prazoStr);
+            target.setHours(0,0,0,0);
+
+            if (target < today) {
+                return 'Atrasado';
+            }
+            return 'Em Andamento';
+        }
+
         function syncOverdueToDailyDemands() {
             const today = new Date();
             today.setHours(0,0,0,0);
@@ -874,8 +958,9 @@
             const modulesToCheck = ['acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
             modulesToCheck.forEach(mod => {
                 appData[mod].forEach(item => {
+                    item.status = calculateAutomaticStatus(item.prazo, item.status);
                     if (item.status !== 'Concluído' && item.prazo) {
-                        const itemDate = parseDateBR(item.prazo);
+                        const itemDate = parseDateISO(item.prazo);
                         itemDate.setHours(0,0,0,0);
                         if (itemDate <= today) {
                             const exists = appData.demandas_dia.some(d => d.descricao === item.descricao);
@@ -893,16 +978,23 @@
                     }
                 });
             });
+
+            // Atualiza status de demandas diárias também
+            appData.demandas_dia.forEach(item => {
+                item.status = calculateAutomaticStatus(item.prazo, item.status);
+            });
         }
 
         function getStatusBadge(prazoStr, status) {
-            if (status === 'Concluído') {
+            const autoStatus = calculateAutomaticStatus(prazoStr, status);
+            
+            if (autoStatus === 'Concluído') {
                 return `<span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-xs flex items-center space-x-1 w-fit"><i class="fa-solid fa-check"></i><span>Concluído</span></span>`;
             }
 
             const today = new Date();
             today.setHours(0,0,0,0);
-            const target = parseDateBR(prazoStr);
+            const target = parseDateISO(prazoStr);
             target.setHours(0,0,0,0);
 
             const diffTime = target - today;
@@ -946,22 +1038,23 @@
             allModules.forEach(mod => {
                 appData[mod].forEach(item => {
                     total++;
-                    if (item.status === 'Concluído') {
+                    const st = calculateAutomaticStatus(item.prazo, item.status);
+                    if (st === 'Concluído') {
                         done++;
                     } else {
-                        const target = parseDateBR(item.prazo);
+                        const target = parseDateISO(item.prazo);
                         target.setHours(0,0,0,0);
                         const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 
                         if (diffDays <= 0) {
                             delayed++;
-                            farolVencidas.push({ desc: item.descricao, prazo: item.prazo });
+                            farolVencidas.push({ desc: item.descricao, prazo: formatDateBR(target) });
                         } else if (diffDays <= 7) {
                             noTime++;
-                            farol7.push({ desc: item.descricao, prazo: item.prazo });
+                            farol7.push({ desc: item.descricao, prazo: formatDateBR(target) });
                         } else if (diffDays <= 30) {
                             noTime++;
-                            farol30.push({ desc: item.descricao, prazo: item.prazo });
+                            farol30.push({ desc: item.descricao, prazo: formatDateBR(target) });
                         } else {
                             noTime++;
                         }
@@ -972,21 +1065,22 @@
             appData.tiram_sono.forEach(item => {
                 item.acoes.forEach(ac => {
                     total++;
-                    if (ac.status === 'Concluído') {
+                    const st = calculateAutomaticStatus(ac.prazo, ac.status);
+                    if (st === 'Concluído') {
                         done++;
                     } else {
-                        const target = parseDateBR(ac.prazo);
+                        const target = parseDateISO(ac.prazo);
                         target.setHours(0,0,0,0);
                         const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
                         if (diffDays <= 0) {
                             delayed++;
-                            farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                            farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
                         } else if (diffDays <= 7) {
                             noTime++;
-                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
                         } else if (diffDays <= 30) {
                             noTime++;
-                            farol30.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                            farol30.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
                         } else {
                             noTime++;
                         }
@@ -1018,60 +1112,97 @@
                 return;
             }
 
-            container.innerHTML = appData.projects.map((proj, idx) => `
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
-                        <div>
+            container.innerHTML = appData.projects.map((proj, idx) => {
+                // Atualiza status do projeto com base no prazo geral e calcula curva S pelas ações
+                proj.status = calculateAutomaticStatus(proj.schedule, proj.status);
+                
+                let calculatedProgress = proj.progress || 0;
+                if (proj.actions && proj.actions.length > 0) {
+                    const completedActions = proj.actions.filter(a => a.status === 'Concluído').length;
+                    calculatedProgress = Math.round((completedActions / proj.actions.length) * 100);
+                    proj.progress = calculatedProgress;
+                }
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-brand-light text-brand text-xs font-bold px-2.5 py-1 rounded">${proj.system}</span>
+                                    <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded">Prioridade: ${proj.priority}</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mt-1">${proj.name}</h3>
+                                <p class="text-xs text-slate-600 mt-0.5">${proj.desc}</p>
+                            </div>
                             <div class="flex items-center space-x-2">
-                                <span class="bg-brand-light text-brand text-xs font-bold px-2.5 py-1 rounded">${proj.system}</span>
-                                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded">Prioridade: ${proj.priority}</span>
+                                ${getStatusBadge(proj.schedule, proj.status)}
+                                <button onclick="editProject(${idx})" class="p-2 text-slate-500 hover:text-brand" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteProject(${idx})" class="p-2 text-slate-500 hover:text-red-600" title="Excluir"><i class="fa-solid fa-trash"></i></button>
                             </div>
-                            <h3 class="text-base font-bold text-slate-900 mt-1">${proj.name}</h3>
-                            <p class="text-xs text-slate-600 mt-0.5">${proj.desc}</p>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            ${getStatusBadge(proj.schedule, proj.status)}
-                            <button onclick="editProject(${idx})" class="p-2 text-slate-500 hover:text-brand"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProject(${idx})" class="p-2 text-slate-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <div><strong class="text-slate-700">Escopo:</strong> ${proj.scope || '-'}</div>
+                            <div><strong class="text-slate-700">Equipes:</strong> ${proj.teams ? proj.teams.join(', ') : '-'}</div>
+                            <div><strong class="text-slate-700">Custos / Capex:</strong> ${proj.cost || '-'}</div>
                         </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                        <div><strong class="text-slate-700">Escopo:</strong> ${proj.scope || '-'}</div>
-                        <div><strong class="text-slate-700">Equipes:</strong> ${proj.teams || '-'}</div>
-                        <div><strong class="text-slate-700">Custos / Capex:</strong> ${proj.cost || '-'}</div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs font-semibold mb-1">
-                            <span>Progresso Físico (Curva S)</span>
-                            <span>${proj.progress}%</span>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Evolução Curva S (Calculada pelas Ações)</span>
+                                <span>${calculatedProgress}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-brand h-2.5 rounded-full transition-all duration-500" style="width: ${calculatedProgress}%"></div>
+                            </div>
                         </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-brand h-2.5 rounded-full transition-all duration-500" style="width: ${proj.progress}%"></div>
-                        </div>
-                    </div>
-                    ${proj.docs && proj.docs.length > 0 ? `
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                            <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-brand"></i> Documentação Vinculada</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                ${proj.docs.map(d => `
-                                    <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
-                                        <div class="truncate mr-2">
-                                            <span class="font-semibold text-slate-800 block">${d.desc}</span>
-                                            <a href="${d.fileData}" download="${d.fileName}" class="text-brand hover:underline text-[11px]"><i class="fa-solid fa-download mr-1"></i>${d.fileName}</a>
+                        ${proj.actions && proj.actions.length > 0 ? `
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-list-check mr-1 text-brand"></i> Plano de Ação (Fases do Projeto)</h4>
+                                <div class="space-y-1.5">
+                                    ${proj.actions.map((act, actIdx) => `
+                                        <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                            <div class="flex items-center space-x-2">
+                                                <input type="checkbox" ${act.status === 'Concluído' ? 'checked' : ''} onchange="toggleProjectActionDone(${idx}, ${actIdx})" class="w-4 h-4 text-brand rounded">
+                                                <span class="${act.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${act.desc}</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 space-x-2">
+                                                <span>Resp: <strong>${act.resp || '-'}</strong></span>
+                                                <span>Prazo: ${act.prazo ? act.prazo.split('-').reverse().join('/') : '-'}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('')}
+                                    `).join('')}
+                                </div>
                             </div>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                        ` : ''}
+                        ${proj.docs && proj.docs.length > 0 ? `
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-brand"></i> Documentação Vinculada</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    ${proj.docs.map(d => `
+                                        <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                            <div class="truncate mr-2">
+                                                <span class="font-semibold text-slate-800 block">${d.desc}</span>
+                                                <a href="${d.fileData}" download="${d.fileName}" class="text-brand hover:underline text-[11px]"><i class="fa-solid fa-download mr-1"></i>${d.fileName}</a>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
         }
 
         function openModalProject(idx = null) {
             document.getElementById('projectModal').classList.remove('hidden');
             currentProjectDocs = [];
+            currentProjectActions = [];
             renderProjectDocsList();
+            renderProjectActionsList();
+
+            // Limpa checkboxes de equipes
+            document.querySelectorAll('input[name="projTeamCheckbox"]').forEach(cb => cb.checked = false);
+
             if (idx !== null) {
                 const p = appData.projects[idx];
                 document.getElementById('projId').value = idx;
@@ -1079,14 +1210,20 @@
                 document.getElementById('projSystem').value = p.system;
                 document.getElementById('projDesc').value = p.desc;
                 document.getElementById('projScope').value = p.scope;
-                document.getElementById('projTeams').value = p.teams;
                 document.getElementById('projSchedule').value = p.schedule;
                 document.getElementById('projCost').value = p.cost;
                 document.getElementById('projPriority').value = p.priority;
-                document.getElementById('projProgress').value = p.progress;
-                document.getElementById('projStatus').value = p.status;
+                
+                if (p.teams && Array.isArray(p.teams)) {
+                    document.querySelectorAll('input[name="projTeamCheckbox"]').forEach(cb => {
+                        if (p.teams.includes(cb.value)) cb.checked = true;
+                    });
+                }
+
                 currentProjectDocs = p.docs ? [...p.docs] : [];
+                currentProjectActions = p.actions ? [...p.actions] : [];
                 renderProjectDocsList();
+                renderProjectActionsList();
                 document.getElementById('projectModalTitle').innerText = 'Editar Projeto';
             } else {
                 document.getElementById('projectForm').reset();
@@ -1097,6 +1234,54 @@
 
         function closeProjectModal() {
             document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        function addProjectAction() {
+            const desc = document.getElementById('projActionDesc').value;
+            const resp = document.getElementById('projActionResp').value;
+            const prazo = document.getElementById('projActionPrazo').value;
+
+            if (!desc || !prazo) {
+                alert('Preencha a descrição e o prazo da ação do projeto.');
+                return;
+            }
+
+            currentProjectActions.push({
+                desc: desc,
+                resp: resp,
+                prazo: prazo,
+                status: 'Em Andamento'
+            });
+
+            document.getElementById('projActionDesc').value = '';
+            document.getElementById('projActionResp').value = '';
+            document.getElementById('projActionPrazo').value = '';
+            renderProjectActionsList();
+        }
+
+        function renderProjectActionsList() {
+            const list = document.getElementById('projActionsList');
+            if (!list) return;
+            list.innerHTML = currentProjectActions.map((act, i) => `
+                <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" ${act.status === 'Concluído' ? 'checked' : ''} onchange="toggleModalProjectAction(${i})" class="w-4 h-4 text-brand rounded">
+                        <span class="${act.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${act.desc} (${act.resp || 'Sem resp'} - ${act.prazo ? act.prazo.split('-').reverse().join('/') : ''})</span>
+                    </div>
+                    <button type="button" onclick="currentProjectActions.splice(${i},1);renderProjectActionsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function toggleModalProjectAction(i) {
+            currentProjectActions[i].status = currentProjectActions[i].status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            renderProjectActionsList();
+        }
+
+        function toggleProjectActionDone(projIdx, actIdx) {
+            const act = appData.projects[projIdx].actions[actIdx];
+            act.status = act.status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            refreshAllViews();
         }
 
         function addProjectDoc() {
@@ -1135,17 +1320,29 @@
         function saveProject(e) {
             e.preventDefault();
             const idx = document.getElementById('projId').value;
+            
+            // Coleta equipes selecionadas ordenadas alfabeticamente
+            const selectedTeams = [];
+            document.querySelectorAll('input[name="projTeamCheckbox"]:checked').forEach(cb => {
+                selectedTeams.push(cb.value);
+            });
+            selectedTeams.sort();
+
+            const scheduleStr = document.getElementById('projSchedule').value;
+            const statusAuto = calculateAutomaticStatus(scheduleStr, 'Em Andamento');
+
             const item = {
                 name: document.getElementById('projName').value,
                 system: document.getElementById('projSystem').value,
                 desc: document.getElementById('projDesc').value,
                 scope: document.getElementById('projScope').value,
-                teams: document.getElementById('projTeams').value,
-                schedule: document.getElementById('projSchedule').value,
+                teams: selectedTeams,
+                schedule: scheduleStr,
                 cost: document.getElementById('projCost').value,
                 priority: document.getElementById('projPriority').value,
-                progress: parseInt(document.getElementById('projProgress').value),
-                status: document.getElementById('projStatus').value,
+                progress: 0,
+                status: statusAuto,
+                actions: currentProjectActions,
                 docs: currentProjectDocs
             };
 
@@ -1185,10 +1382,12 @@
             }
 
             tbody.innerHTML = items.map((item, idx) => {
+                item.status = calculateAutomaticStatus(item.prazo, item.status);
+
                 if (mod === 'melhorias') {
                     let diasCorridos = '-';
                     if (item.dataSolicitacao) {
-                        const dtSol = parseDateBR(item.dataSolicitacao);
+                        const dtSol = parseDateISO(item.dataSolicitacao);
                         const hoje = new Date();
                         hoje.setHours(0,0,0,0);
                         dtSol.setHours(0,0,0,0);
@@ -1296,7 +1495,8 @@
         }
 
         function toggleItemDone(mod, idx) {
-            appData[mod][idx].status = appData[mod][idx].status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            const currentSt = appData[mod][idx].status;
+            appData[mod][idx].status = currentSt === 'Concluído' ? calculateAutomaticStatus(appData[mod][idx].prazo, 'Em Andamento') : 'Concluído';
             refreshAllViews();
         }
 
@@ -1374,7 +1574,7 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Data da Solicitação</label>
-                            <input type="text" id="extraDataSol" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg">
+                            <input type="date" id="extraDataSol" required class="w-full p-2 border border-slate-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Exige MoC?</label>
@@ -1396,7 +1596,7 @@
                 document.getElementById('formItemId').value = idx;
                 document.getElementById('inputDesc').value = item.descricao || '';
                 document.getElementById('inputPrazo').value = item.prazo || '';
-                document.getElementById('inputStatus').value = item.status || 'Em Andamento';
+                document.getElementById('inputStatusDisplay').value = calculateAutomaticStatus(item.prazo, item.status);
                 currentAttachments = item.anexos ? [...item.anexos] : [];
                 renderAttachmentPreviews();
 
@@ -1413,7 +1613,7 @@
                 } else if (mod === 'melhorias') {
                     document.getElementById('extraSistema').value = item.sistema || PRODUCTION_SYSTEMS[0];
                     document.getElementById('extraSolicitante').value = item.solicitante || '';
-                    document.getElementById('extraDataSol').value = item.dataSolicitacao || formatDateBR(new Date());
+                    document.getElementById('extraDataSol').value = item.dataSolicitacao || toISOStringDate(new Date());
                     document.getElementById('extraMoc').value = item.moc || 'Não';
                     document.getElementById('extraRef').value = item.referencia || '';
                 }
@@ -1422,9 +1622,11 @@
             } else {
                 document.getElementById('genericForm').reset();
                 document.getElementById('formItemId').value = '';
-                document.getElementById('inputPrazo').value = formatDateBR(new Date());
+                const todayISO = toISOStringDate(new Date());
+                document.getElementById('inputPrazo').value = todayISO;
+                document.getElementById('inputStatusDisplay').value = 'Em Andamento';
                 if (mod === 'melhorias') {
-                    document.getElementById('extraDataSol').value = formatDateBR(new Date());
+                    document.getElementById('extraDataSol').value = todayISO;
                 }
                 document.getElementById('modalTitle').innerText = 'Cadastrar Novo Item';
             }
@@ -1438,11 +1640,12 @@
             e.preventDefault();
             const mod = document.getElementById('formModule').value;
             const idx = document.getElementById('formItemId').value;
+            const prazoVal = document.getElementById('inputPrazo').value;
 
             let item = {
                 descricao: document.getElementById('inputDesc').value,
-                prazo: document.getElementById('inputPrazo').value,
-                status: document.getElementById('inputStatus').value,
+                prazo: prazoVal,
+                status: calculateAutomaticStatus(prazoVal, 'Em Andamento'),
                 anexos: currentAttachments
             };
 
@@ -1484,6 +1687,7 @@
             }
 
             container.innerHTML = appData.tiram_sono.map((item, idx) => {
+                item.status = calculateAutomaticStatus(item.prazo, item.status);
                 const totalActions = item.acoes ? item.acoes.length : 0;
                 const completedActions = item.acoes ? item.acoes.filter(a => a.status === 'Concluído').length : 0;
                 const progressPercent = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
@@ -1525,7 +1729,7 @@
                                                 <span class="${ac.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${ac.desc}</span>
                                             </div>
                                             <div class="flex items-center space-x-3">
-                                                <span class="text-slate-500">Prazo: ${ac.prazo}</span>
+                                                <span class="text-slate-500">Prazo: ${ac.prazo ? ac.prazo.split('-').reverse().join('/') : ''}</span>
                                                 <select onchange="updateSleepActionStatus(${idx}, ${acIdx}, this.value)" class="p-1 border rounded text-[11px] font-semibold ${ac.status === 'Concluído' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">
                                                     <option value="À Iniciar" ${ac.status==='À Iniciar'?'selected':''}>À Iniciar</option>
                                                     <option value="Em Andamento" ${ac.status==='Em Andamento'?'selected':''}>Em Andamento</option>
@@ -1563,7 +1767,7 @@
             } else {
                 document.getElementById('sleeplessForm').reset();
                 document.getElementById('sleepId').value = '';
-                document.getElementById('sleepPrazo').value = formatDateBR(new Date());
+                document.getElementById('sleepPrazo').value = toISOStringDate(new Date());
                 document.getElementById('sleeplessModalTitle').innerText = 'Nova Atividade Crítica';
             }
         }
@@ -1594,7 +1798,7 @@
             if (!list) return;
             list.innerHTML = currentSleepActions.map((a, i) => `
                 <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
-                    <div><strong>${a.desc}</strong> (Prazo: ${a.prazo}) - <span class="text-brand font-semibold">${a.status}</span></div>
+                    <div><strong>${a.desc}</strong> (Prazo: ${a.prazo ? a.prazo.split('-').reverse().join('/') : ''}) - <span class="text-brand font-semibold">${a.status}</span></div>
                     <button type="button" onclick="currentSleepActions.splice(${i},1);renderSleepActionsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             `).join('');
@@ -1603,14 +1807,16 @@
         function saveSleepless(e) {
             e.preventDefault();
             const idx = document.getElementById('sleepId').value;
+            const prazoVal = document.getElementById('sleepPrazo').value;
+
             let item = {
                 name: document.getElementById('sleepName').value,
                 team: document.getElementById('sleepTeam').value,
                 system: document.getElementById('sleepSystem').value,
                 desc: document.getElementById('sleepDesc').value,
-                prazo: document.getElementById('sleepPrazo').value,
+                prazo: prazoVal,
                 resp: document.getElementById('sleepResp').value,
-                status: 'Em Andamento',
+                status: calculateAutomaticStatus(prazoVal, 'Em Andamento'),
                 acoes: currentSleepActions
             };
 
@@ -1653,7 +1859,7 @@
                 sleepItem.status = 'Concluído';
             } else {
                 if (sleepItem.status === 'Concluído') {
-                    sleepItem.status = 'Em Andamento';
+                    sleepItem.status = calculateAutomaticStatus(sleepItem.prazo, 'Em Andamento');
                 }
             }
         }
@@ -1776,7 +1982,6 @@
                 if (data && data.data) {
                     appData = data.data;
                 } else {
-                    // Tenta carregar do localStorage se não houver na nuvem ainda
                     loadFromLocalStorage();
                 }
             } catch (err) {
