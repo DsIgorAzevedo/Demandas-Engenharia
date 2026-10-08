@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Engenharia de Processos - Expedição Ferroviária (TFA)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#007E7A',
+                            dark: '#005f5c',
+                            light: '#e6f2f2'
+                        },
+                        neutralGray: '#919191',
+                        accent: '#ECB11F',
+                        accentHover: '#d49b15'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .mobile-view { max-width: 414px; margin: 0 auto; box-shadow: 0 0 25px rgba(0,0,0,0.15); border: 8px solid #333; border-radius: 24px; min-height: 850px; overflow: hidden; background: #f8fafc; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <div id="appContainer" class="flex-1 flex flex-col md:flex-row w-full transition-all duration-300">
+        
+        <!-- Sidebar Esquerda / Navegação -->
+        <aside class="w-full md:w-72 bg-brand-dark text-white flex flex-col shadow-lg z-30 shrink-0">
+            <div class="p-4 bg-brand border-b border-white/10 flex items-center space-x-3">
+                <div class="bg-white/10 p-2.5 rounded-xl border border-white/20">
+                    <i class="fa-solid fa-train text-2xl text-accent"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold tracking-wide">Engenharia de Processos</h1>
+                    <p class="text-[11px] text-brand-light opacity-90">Expedição Ferroviária (TFA)</p>
+                </div>
+            </div>
+
+            <!-- Menu de Abas Lateral -->
+            <nav class="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
+                <button onclick="switchTab('dashboard')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-white bg-brand shadow-inner flex items-center space-x-2.5" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-pie w-4 text-center"></i><span>Dashboard & Farol</span>
+                </button>
+                <button onclick="switchTab('fluxo_tfa')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="fluxo_tfa">
+                    <i class="fa-solid fa-route w-4 text-center"></i><span>Fluxo de Operações (TFA)</span>
+                </button>
+                <button onclick="switchTab('projetos')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="projetos">
+                    <i class="fa-solid fa-diagram-project w-4 text-center"></i><span>Gestão de Projetos</span>
+                </button>
+                <button onclick="switchTab('demandas_dia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="demandas_dia">
+                    <i class="fa-solid fa-calendar-day w-4 text-center"></i><span>Demandas do Dia</span>
+                </button>
+                <button onclick="switchTab('acoes_semana')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="acoes_semana">
+                    <i class="fa-solid fa-calendar-week w-4 text-center"></i><span>Ações da Semana</span>
+                </button>
+                <button onclick="switchTab('cpia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="cpia">
+                    <i class="fa-solid fa-clipboard-check w-4 text-center"></i><span>Ações CPIA</span>
+                </button>
+                <button onclick="switchTab('analise_falha')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="analise_falha">
+                    <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i><span>Análise de Falha (AF)</span>
+                </button>
+                <button onclick="switchTab('documentacao')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="documentacao">
+                    <i class="fa-solid fa-file-lines w-4 text-center"></i><span>Documentação</span>
+                </button>
+                <button onclick="switchTab('tiram_sono')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="tiram_sono">
+                    <i class="fa-solid fa-triangle-exclamation text-accent w-4 text-center"></i><span>Tiram o Sono</span>
+                </button>
+                <button onclick="switchTab('melhorias')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="melhorias">
+                    <i class="fa-solid fa-lightbulb w-4 text-center"></i><span>Melhorias Operacionais</span>
+                </button>
+                <button onclick="switchTab('glossario')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="glossario">
+                    <i class="fa-solid fa-book w-4 text-center"></i><span>Glossário Técnico</span>
+                </button>
+            </nav>
+
+            <!-- Rodapé da Sidebar (Ações globais) -->
+            <div class="p-3 bg-brand-dark/80 border-t border-white/10 space-y-2">
+                <button onclick="toggleLayoutMode()" id="layoutToggleBtn" class="w-full bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-center space-x-2 border border-white/20 transition">
+                    <i class="fa-solid fa-desktop" id="layoutIcon"></i>
+                    <span id="layoutText">Modo Mobile</span>
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="exportData()" class="bg-accent hover:bg-accentHover text-slate-900 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 shadow transition">
+                        <i class="fa-solid fa-download"></i><span>Backup</span>
+                    </button>
+                    <label class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center justify-center space-x-1 cursor-pointer border border-white/20 transition">
+                        <i class="fa-solid fa-upload"></i><span>Restaurar</span>
+                        <input type="file" id="importFile" accept=".json" onchange="importData(event)" class="hidden">
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 w-full p-4 md:p-6 overflow-y-auto">
+
+            <!-- 1. DASHBOARD & FAROL -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+                            <i class="fa-solid fa-gauge-high text-brand"></i>
+                            <span>Painel Gerencial & Farol de Alerta</span>
+                        </h2>
+                        <p class="text-xs text-slate-500">Visão consolidada de todas as frentes, prazos e status operacionais.</p>
+                    </div>
+                    <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium">
+                        <i class="fa-regular fa-calendar text-brand mr-1"></i> Data Base: <span id="currentDateDisplay"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-brand flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total de Ações</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-1" id="statTotal">0</h3>
+                        </div>
+                        <div class="bg-brand-light p-3 rounded-xl text-brand text-xl"><i class="fa-solid fa-layer-group"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">No Prazo</p>
+                            <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="statOnTime">0</h3>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600 text-xl"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-red-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Atrasadas</p>
+                            <h3 class="text-2xl font-bold text-red-600 mt-1" id="statDelayed">0</h3>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded-xl text-red-600 text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Executadas</p>
+                            <h3 class="text-2xl font-bold text-blue-600 mt-1" id="statDone">0</h3>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl text-blue-600 text-xl"><i class="fa-solid fa-square-check"></i></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-lightbulb text-accent"></i>
+                        <span>Farol de Vencimentos & Alertas Críticos</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-red-700 uppercase tracking-wider"><i class="fa-solid fa-circle-xmark mr-1"></i> Vencidas / Hoje</span>
+                                <span id="farolVencidasCount" class="bg-red-200 text-red-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                            </div>
+                            <div id="farolVencidasList" class="space-y-2 mt-3 max-h-48 overflow-y-auto text-xs">
+                                <p class="text-slate-500 italic">Nenhum item vencido.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-clock mr-1"></i> Próximos 7 Dias</span>
+                                <span id="farol7DiasCount" class="bg-amber-200 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                            </div>
+                            <div id="farol7DiasList" class="space-y-2 mt-3 max-h-48 overflow-y-auto text-xs">
+                                <p class="text-slate-500 italic">Nenhum item nos próximos 7 dias.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-blue-700 uppercase tracking-wider"><i class="fa-solid fa-calendar-days mr-1"></i> Próximos 30 Dias</span>
+                                <span id="farol30DiasCount" class="bg-blue-200 text-blue-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                            </div>
+                            <div id="farol30DiasList" class="space-y-2 mt-3 max-h-48 overflow-y-auto text-xs">
+                                <p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. FLUXO DE OPERAÇÕES (TFA) - IMAGEM EM ALTA DEFINIÇÃO -->
+            <section id="tab-fluxo_tfa" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+                                <i class="fa-solid fa-route text-brand"></i>
+                                <span>Fluxograma Operacional (TFA) - Documento Oficial</span>
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Diagrama esquemático oficial sem dados de capacidades ou comprimentos.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="bg-brand text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-brand-dark transition flex items-center space-x-1.5 shadow">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                                <span>Carregar Imagem do Fluxograma (PDF/PNG)</span>
+                                <input type="file" id="fluxoImageInput" accept="image/*,.pdf" onchange="loadFluxoImage(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="fluxoDisplayContainer" class="flex flex-col items-center justify-center bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 p-8 min-h-[500px]">
+                        <div id="fluxoPlaceholder" class="text-center space-y-3">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow mx-auto text-brand text-2xl">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-700 text-sm">Nenhuma imagem carregada do fluxograma</h3>
+                            <p class="text-xs text-slate-500 max-w-md">Clique no botão acima para carregar a imagem em alta definição do fluxograma extraída do documento original.</p>
+                        </div>
+                        <img id="fluxoImagePreview" class="hidden max-w-full h-auto rounded-xl shadow-md border border-slate-200 object-contain max-h-[750px]" alt="Fluxograma Operacional TFA">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. GESTÃO DE PROJETOS -->
+            <section id="tab-projetos" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Gestão de Projetos de Investimento & Capex</h2>
+                        <p class="text-xs text-slate-500">Controle completo de escopo, cronograma, Curva S e documentação técnica.</p>
+                    </div>
+                    <button onclick="openModalProject()" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Novo Projeto</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-6" id="projectsContainer"></div>
+            </section>
+
+            <!-- 4. DEMANDAS DO DIA -->
+            <section id="tab-demandas_dia" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Demandas para Executar no Dia</h2>
+                        <p class="text-xs text-slate-500">Inclui automaticamente tarefas vencidas ou com vencimento no dia corrente.</p>
+                    </div>
+                    <button onclick="openModalItem('demandas_dia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Demanda Diária</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">Status / Prazo</th>
+                                    <th class="p-3">Descrição</th>
+                                    <th class="p-3">Categoria</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableDemandasDia" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. AÇÕES DA SEMANA -->
+            <section id="tab-acoes_semana" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Ações para a Semana Corrente</h2>
+                        <p class="text-xs text-slate-500">Planejamento tático de médio prazo da semana operacional.</p>
+                    </div>
+                    <button onclick="openModalItem('acoes_semana')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Ação Semanal</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">Status / Prazo</th>
+                                    <th class="p-3">Descrição</th>
+                                    <th class="p-3">Categoria</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableAcoesSemana" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. AÇÕES CPIA -->
+            <section id="tab-cpia" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Gestão de Ações CPIA</h2>
+                        <p class="text-xs text-slate-500">Acompanhamento de planos de ação e pendências CPIA.</p>
+                    </div>
+                    <button onclick="openModalItem('cpia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Ação CPIA</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">ID Ação</th>
+                                    <th class="p-3">Status / Prazo</th>
+                                    <th class="p-3">Descrição</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableCpia" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. ANÁLISE DE FALHA -->
+            <section id="tab-analise_falha" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Ações de Análise de Falha (AF)</h2>
+                        <p class="text-xs text-slate-500">Tratativas e contramedidas baseadas em investigações de falhas.</p>
+                    </div>
+                    <button onclick="openModalItem('analise_falha')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Ação de AF</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">Ref. AF</th>
+                                    <th class="p-3">Status / Prazo</th>
+                                    <th class="p-3">Descrição da Ação</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableAf" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. DOCUMENTAÇÃO -->
+            <section id="tab-documentacao" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Demandas de Criação e Revisão de Documentação</h2>
+                        <p class="text-xs text-slate-500">Controle de procedimentos, manuais, fluxogramas e normas técnicas.</p>
+                    </div>
+                    <button onclick="openModalItem('documentacao')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Demanda Doc</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">Ação / Tipo</th>
+                                    <th class="p-3">Status / Prazo</th>
+                                    <th class="p-3">Descrição / Origem</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableDoc" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. ATIVIDADES QUE TIRAM O SONO -->
+            <section id="tab-tiram_sono" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Atividades que Tiram o Sono (Turnos & ADM)</h2>
+                        <p class="text-xs text-slate-500">Itens críticos por equipe com plano de ação e progresso dinâmico.</p>
+                    </div>
+                    <button onclick="openModalSleepless()" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Atividade Crítica</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-6" id="sleeplessContainer"></div>
+            </section>
+
+            <!-- 10. MELHORIAS OPERACIONAIS -->
+            <section id="tab-melhorias" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Demandas de Melhoria Operacional</h2>
+                        <p class="text-xs text-slate-500">Iniciativas de melhoria contínua, MoC e referências de manutenção (OM, chamados).</p>
+                    </div>
+                    <button onclick="openModalItem('melhorias')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Nova Melhoria</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">Status / Prazo / Dias Corridos</th>
+                                    <th class="p-3">Sistema / Descrição</th>
+                                    <th class="p-3">Solicitante / MoC / Ref</th>
+                                    <th class="p-3">Anexos</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableMelhorias" class="divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11. GLOSSÁRIO TÉCNICO -->
+            <section id="tab-glossario" class="tab-content hidden space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Glossário Técnico & Engenharia Ferroviária/Industrial</h2>
+                            <p class="text-xs text-slate-500">Definições avançadas de projetos, Capex, Opex, transportadores de correia, recuperadoras, alimentadores e estocagem.</p>
+                        </div>
+                        <div class="w-full md:w-72">
+                            <input type="text" id="glossarySearch" oninput="filterGlossary()" placeholder="Buscar termo ou conceito..." class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="glossaryContainer"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAIS -->
+    <div id="genericModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+            <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
+                <h3 id="modalTitle" class="font-bold text-sm">Cadastrar Novo Item</h3>
+                <button onclick="closeModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="genericForm" onsubmit="saveGenericItem(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="formModule">
+                <input type="hidden" id="formItemId">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição</label>
+                    <textarea id="inputDesc" rows="3" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prazo (dd/mm/aaaa)</label>
+                        <input type="text" id="inputPrazo" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Status</label>
+                        <select id="inputStatus" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand">
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Atrasado">Atrasado</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="extraFields" class="space-y-4"></div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Anexar Arquivo do Dispositivo</label>
+                    <input type="file" id="inputFileDevice" onchange="handleFileAttachment(event)" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50 text-xs">
+                    <div id="attachmentPreview" class="mt-2 flex flex-wrap gap-2"></div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark font-semibold shadow">Salvar Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="projectModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+            <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
+                <h3 id="projectModalTitle" class="font-bold text-sm">Gerenciar Projeto</h3>
+                <button onclick="closeProjectModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="projectForm" onsubmit="saveProject(event)" class="p-6 space-y-4 text-xs overflow-y-auto flex-1">
+                <input type="hidden" id="projId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Nome do Projeto</label>
+                        <input type="text" id="projName" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Sistema Produtivo</label>
+                        <select id="projSystem" required class="w-full p-2 border border-slate-300 rounded-lg"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição</label>
+                    <textarea id="projDesc" rows="2" required class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Escopo</label>
+                        <textarea id="projScope" rows="2" class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Equipes Envolvidas</label>
+                        <input type="text" id="projTeams" class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Cronograma / Prazos</label>
+                        <input type="text" id="projSchedule" placeholder="dd/mm/aaaa" class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Custos (R$ / Capex)</label>
+                        <input type="text" id="projCost" class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
+                        <select id="projPriority" class="w-full p-2 border border-slate-300 rounded-lg">
+                            <option value="Alta">Alta</option>
+                            <option value="Média">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">% Andamento (Curva S)</label>
+                        <input type="number" id="projProgress" min="0" max="100" value="0" class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Status</label>
+                        <select id="projStatus" class="w-full p-2 border border-slate-300 rounded-lg">
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Atrasado">Atrasado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="border-t pt-3">
+                    <label class="block font-semibold text-slate-700 mb-2">Documentação Vinculada ao Projeto</label>
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" id="projDocDescInput" placeholder="Descrição do documento..." class="flex-1 p-2 border border-slate-300 rounded-lg">
+                        <input type="file" id="projDocFileInput" class="p-1 border border-slate-300 rounded-lg text-xs w-48">
+                        <button type="button" onclick="addProjectDoc()" class="bg-brand text-white px-3 py-1.5 rounded-lg">Adicionar</button>
+                    </div>
+                    <div id="projDocsList" class="space-y-1 text-xs"></div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeProjectModal()" class="px-4 py-2 border border-slate-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand text-white rounded-lg font-semibold">Salvar Projeto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="sleeplessModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+            <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
+                <h3 id="sleeplessModalTitle" class="font-bold text-sm">Atividade que Tira o Sono</h3>
+                <button onclick="closeSleeplessModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="sleeplessForm" onsubmit="saveSleepless(event)" class="p-6 space-y-4 text-xs overflow-y-auto flex-1">
+                <input type="hidden" id="sleepId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Nome da Atividade</label>
+                        <input type="text" id="sleepName" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Equipe</label>
+                        <select id="sleepTeam" required class="w-full p-2 border border-slate-300 rounded-lg">
+                            <option value="Turno A">Turno A</option>
+                            <option value="Turno B">Turno B</option>
+                            <option value="Turno C">Turno C</option>
+                            <option value="Turno D">Turno D</option>
+                            <option value="ADM (Controle Operacional)">ADM (Controle Operacional)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Sistema Produtivo</label>
+                    <select id="sleepSystem" required class="w-full p-2 border border-slate-300 rounded-lg"></select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição</label>
+                    <textarea id="sleepDesc" rows="2" required class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prazo Geral</label>
+                        <input type="text" id="sleepPrazo" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Responsável</label>
+                        <input type="text" id="sleepResp" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                </div>
+                <div class="border-t pt-3">
+                    <label class="block font-semibold text-slate-700 mb-2">Plano de Ação (Ações Mitigadoras)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
+                        <input type="text" id="actionDescInput" placeholder="Descrição da ação..." class="p-2 border border-slate-300 rounded-lg md:col-span-2">
+                        <input type="text" id="actionPrazoInput" placeholder="dd/mm/aaaa" class="p-2 border border-slate-300 rounded-lg">
+                        <button type="button" onclick="addSleeplessAction()" class="bg-brand text-white px-3 py-1.5 rounded-lg font-semibold">Adicionar Ação</button>
+                    </div>
+                    <div id="sleepActionsList" class="space-y-2 text-xs"></div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeSleeplessModal()" class="px-4 py-2 border border-slate-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand text-white rounded-lg font-semibold">Salvar Atividade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA E DADOS -->
+    <script>
+        const PRODUCTION_SYSTEMS = [
+            "TLCD PICO",
+            "TCLD VGR 1",
+            "TCLD VGR 2",
+            "PÁTIO TFA",
+            "TFA 1",
+            "TFA 2",
+            "TFA 3",
+            "DRENAGEM FORÇADA",
+            "ASPERSÃO"
+        ];
+
+        const GLOSSARY_DATA = [
+            // Gestão de Projetos & Finanças
+            { term: "CAPEX (Capital Expenditure)", category: "Gestão de Projetos & Finanças", desc: "Investimentos em bens de capital, ativos fixos, expansão de capacidade produtiva, novas instalações e modernização de equipamentos na expedição ferroviária." },
+            { term: "OPEX (Operational Expenditure)", category: "Gestão de Projetos & Finanças", desc: "Despesas operacionais recorrentes de manutenção, energia elétrica, insumos, operação e suporte para manter os ativos rodando." },
+            { term: "Curva S", category: "Gestão de Projetos & Finanças", desc: "Gráfico de progresso acumulado do projeto versus tempo, essencial para monitorar o avanço físico e financeiro do empreendimento." },
+            { term: "FEL (Front-End Loading)", category: "Gestão de Projetos & Finanças", desc: "Metodologia de estruturação e maturação de projetos dividida em FEL 1 (Conceitual), FEL 2 (Viabilidade/Pré-projeto) e FEL 3 (Projeto Básico/Detalhado)." },
+            { term: "As-Built", category: "Gestão de Projetos & Finanças", desc: "Documentação técnica atualizada e revisada refletindo exatamente como a instalação ou equipamento foi construído e montado em campo." },
+            { term: "EAP (Estrutura Analítica do Projeto / WBS)", category: "Gestão de Projetos & Finanças", desc: "Decomposição hierárquica do escopo total do projeto em entregas menores e gerenciáveis." },
+            { term: "Baseline (Linha de Base)", category: "Gestão de Projetos & Finanças", desc: "Versão aprovada do cronograma, orçamento e escopo usada como referência para medição de desvios." },
+
+            // Indicadores & KPIs
+            { term: "DF / UF", category: "Indicadores & KPIs", desc: "Disponibilidade Física (DF) e Utilização Física (UF), métricas fundamentais de OEE para medir o tempo operacional efetivo e a prontidão dos ativos." },
+            { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores & KPIs", desc: "Índice de Eficiência Global dos Equipamentos, calculado pelo produto de Disponibilidade x Desempenho x Qualidade." },
+            { term: "MTBF / MTTR", category: "Indicadores & KPIs", desc: "Mean Time Between Failures (Tempo Médio entre Falhas) e Mean Time To Repair (Tempo Médio para Reparo), medindo confiabilidade e mantenabilidade." },
+            { term: "Taxa de Ocupação da Expedição", category: "Indicadores & KPIs", desc: "Métrica operacional que avalia o percentual de tempo em que os circuitos de carregamento de vagões e trens estão efetivamente operando com carga." },
+            { term: "Backlog de Manutenção", category: "Indicadores & KPIs", desc: "Volume de serviços de manutenção pendentes de execução, medido em homem-horas ou semanas de trabalho acumuladas." },
+
+            // Transportadores de Correia e Componentes
+            { term: "Transportador de Correia (Belt Conveyor)", category: "Transportadores de Correia", desc: "Sistema contínuo de movimentação de minério a granel composto por correia emborrachada, tambores de acionamento/retorno, roletes de carga e impacto." },
+            { term: "Roletes de Carga e Retorno (Idlers)", category: "Transportadores de Correia", desc: "Conjuntos de rolos cilíndricos com rolamentos blindados que suportam a correia carregada (carga) e o retorno do ramal vazio." },
+            { term: "Roletes de Impacto", category: "Transportadores de Correia", desc: "Roletes dotados de anéis de borracha absorvedora de choques, posicionados diretamente sob as zonas de transferência e moegas de carga." },
+            { term: "Tambor de Acionamento (Drive Pulley)", category: "Transportadores de Correia", desc: "Tambor revestido de borracha (lagging) conectado ao motoredutor responsável por transmitir a tração e movimentar a correia." },
+            { term: "Tambor de Retorno e Esticamento", category: "Transportadores de Correia", desc: "Tambores localizados nas extremidades opostas e na torre de estiramento para garantir o alinhamento e a tensão adequada da correia." },
+            { term: "Sistema de Esticamento (Take-Up)", category: "Transportadores de Correia", desc: "Conjunto de contrapesos ou guinchos hidráulicos/elétricos que mantêm a tensão constante na correia, compensando dilatações e estiramentos." },
+            { term: "Raspadores de Correia (Primary & Secondary Cleaners)", category: "Transportadores de Correia", desc: "Lâminas de poliuretano ou metal instaladas no tambor de descarga para remover o minério aderido (finesse), evitando o retorno de material (carry-back)." },
+            { term: "Chicote / Desalinhamento de Correia", category: "Transportadores de Correia", desc: "Anomalia onde a correia desvia lateralmente do eixo central, podendo causar danos severos às bordas e derrames de material." },
+            { term: "Skirtboard (Saias de Vedação)", category: "Transportadores de Correia", desc: "Placas laterais e borrachas de vedação instaladas nas calhas de transferência para conter o fluxo de minério e evitar emissão de poeira." },
+            { term: "Calha de Transferência (Chute)", category: "Transportadores de Correia", desc: "Estrutura metálica interna revestida com placas de desgaste (cerâmica ou aço anti-abrasivo) que direciona o minério de uma correia para outra." },
+            { term: "Sensor de Desvio / Corda de Emergência (Pull Cord)", category: "Transportadores de Correia", desc: "Dispositivos de segurança intertravados com o CLP para desligar imediatamente o transportador em caso de emergência ou desalinhamento crítico." },
+
+            // Recuperadoras e Empilhadeiras de Minério
+            { term: "Recuperadora de Minério (Bucket Wheel Reclaimer)", category: "Recuperadoras & Pátio", desc: "Equipamento de grande porte dotado de roda de caçambas na extremidade de uma lança giratória para desestocagem contínua das pilhas do pátio." },
+            { term: "Empilhadeira de Minério (Stacker)", category: "Recuperadoras & Pátio", desc: "Máquina operatriz com lança transportadora móvel destinada à formação controlada de pilhas de estocagem de minério no pátio." },
+            { term: "Lança da Recuperadora (Boom)", category: "Recuperadoras & Pátio", desc: "Estrutura treliçada metálica de longo alcance que suporta a correia de lança e a roda de caçambas, com movimentos de translação, slewing (giro) e luffing (inclinação)." },
+            { term: "Mecanismo de Giro (Slewing Drive)", category: "Recuperadoras & Pátio", desc: "Conjunto coroa-pinhão acionado por motoredutores que permite o giro horizontal da lança da recuperadora sobre a estocagem." },
+            { term: "Caçambas (Buckets)", category: "Recuperadoras & Pátio", desc: "Canecas de aço antidesgaste fixadas na periferia da roda rotativa da recuperadora para escavar e retirar o minério da pilha." },
+            { term: "Harrow (Grade Scarifier)", category: "Recuperadoras & Pátio", desc: "Dispositivo mecânico oscilante acoplado à recuperadora que desmorona o talude da pilha de minério de forma homogênea em direção à base." },
+
+            // Alimentadores de Sapata e Equipamentos de Extração
+            { term: "Alimentador de Sapata (Apron Feeder)", category: "Alimentadores & Moegas", desc: "Alimentador robusto composto por placas articuladas de aço de alta resistência, projetado para extração sob forte impacto de minério bruto de moegas e silos." },
+            { term: "Alimentador Vibratório (Vibrating Feeder)", category: "Alimentadores & Moegas", desc: "Equipamento acionado por motovibradores que utiliza vibração controlada para dosar a vazão de extração de minério a granel." },
+            { term: "Moega de Recebimento (Hopper / Bin)", category: "Alimentadores & Moegas", desc: "Estrutura troncônica ou piramidal robusta para recepção e estocagem temporária de minério descarregado por caminhões ou vagões." },
+            { term: "Placas Articuladas (Apron Pans)", category: "Alimentadores & Moegas", desc: "Elos metálicos sobrepostos e parafusados que formam a esteira contínua de um alimentador de sapata." },
+            { term: "Corrente de Alta Resistência", category: "Alimentadores & Moegas", desc: "Correntes de pinos e buchas endurecidas que tracionam as sapatas do alimentador sob cargas estáticas e dinâmicas elevadas." },
+
+            // Estocagem de Minério e Pátios
+            { term: "Pátio de Estocagem (Stockyard)", category: "Estocagem & Pátios", desc: "Área industrial descoberta destinada à formação de pilhas de minério (homogeneização e pulmão) para garantir vazão contínua aos trens." },
+            { term: "Pilha Longitudinal / Pilha Circular", category: "Estocagem & Pátios", desc: "Geometrias de formação de pilhas no pátio; a longitudinal é empilhada linearmente por empilhadeiras sobre trilhos, e a circular por braço central." },
+            { term: "Blending (Homogeneização)", category: "Estocagem & Pátios", desc: "Processo de mistura de diferentes teores e granulometrias de minério durante o empilhamento e recuperação para garantir especificação química estável na expedição." },
+            { term: "Drenagem de Pátio", category: "Estocagem & Pátios", desc: "Sistema de canaletas, caixas coletoras e bacias de decantação para captação de águas pluviais e escoamento de finos de minério." },
+
+            // Elementos de Máquinas e Acionamentos
+            { term: "Volante de Inércia", category: "Elementos de Máquinas", desc: "Dispositivo mecânico rotativo projetado para armazenar energia cinética, suavizando flutuações de torque em acionamentos pesados." },
+            { term: "Redutor de Velocidade & Acoplamentos", category: "Elementos de Máquinas", desc: "Conjuntos mecânicos responsáveis pela redução de rotação e transmissão de torque dos motores elétricos para os tambores de correias." },
+            { term: "Freio de Contrarrecuo (Backstop)", category: "Elementos de Máquinas", desc: "Dispositivo mecânico de segurança instalado em transportadores inclinados para impedir o retrocesso indesejado da correia carregada quando o motor é desenergizado." },
+            { term: "Acoplamento Hidrodinâmico (Fluid Coupling)", category: "Elementos de Máquinas", desc: "Acoplamento que utiliza óleo para transmitir torque de forma suave, permitindo partidas sem pico excessivo de corrente nos motores." },
+
+            // Segurança & Processos
+            { term: "MoC (Management of Change / Gestão de Mudança)", category: "Segurança & Processos", desc: "Processo formal de avaliação, aprovação e registro de alterações físicas, operacionais ou documentais para mitigar riscos de segurança e operacionais." },
+            { term: "CPIA", category: "Segurança & Processos", desc: "Comissão ou plano de ação focado em investigações de incidentes, desvios e planos de mitigação de riscos operacionais." },
+            { term: "LOTO (Lockout / Tagout)", category: "Segurança & Processos", desc: "Procedimento padrão de bloqueio, etiquetagem e teste de energia zero em equipamentos antes de intervenções de manutenção." }
+        ];
+
+        let appData = {
+            projects: [],
+            demandas_dia: [],
+            acoes_semana: [],
+            cpia: [],
+            analise_falha: [],
+            documentacao: [],
+            tiram_sono: [],
+            melhorias: [],
+            fluxoImageData: null
+        };
+
+        let currentAttachments = [];
+        let currentProjectDocs = [];
+        let currentSleepActions = [];
+        let isMobileLayout = false;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            populateSelects();
+            setDateDisplay();
+            renderGlossary();
+            renderSavedFluxoImage();
+            refreshAllViews();
+        });
+
+        function setDateDisplay() {
+            const now = new Date();
+            document.getElementById('currentDateDisplay').innerText = formatDateBR(now);
+        }
+
+        function formatDateBR(dateObj) {
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const y = dateObj.getFullYear();
+            return `${d}/${m}/${y}`;
+        }
+
+        function parseDateBR(dateStr) {
+            if (!dateStr || !dateStr.includes('/')) return new Date();
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return new Date();
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+
+        function populateSelects() {
+            const selects = ['projSystem', 'sleepSystem'];
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = PRODUCTION_SYSTEMS.map(sys => `<option value="${sys}">${sys}</option>`).join('');
+                }
+            });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-brand', 'text-white', 'shadow-inner');
+                el.classList.add('text-brand-light', 'hover:bg-white/10');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand', 'text-white', 'shadow-inner');
+                activeBtn.classList.remove('text-brand-light', 'hover:bg-white/10');
+            }
+        }
+
+        function toggleLayoutMode() {
+            isMobileLayout = !isMobileLayout;
+            const container = document.getElementById('appContainer');
+            const icon = document.getElementById('layoutIcon');
+            const text = document.getElementById('layoutText');
+
+            if (isMobileLayout) {
+                container.classList.add('mobile-view');
+                icon.className = 'fa-solid fa-mobile-screen';
+                text.innerText = 'Modo Computador';
+            } else {
+                container.classList.remove('mobile-view');
+                icon.className = 'fa-solid fa-desktop';
+                text.innerText = 'Modo Mobile';
+            }
+        }
+
+        function loadFluxoImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                appData.fluxoImageData = e.target.result;
+                renderSavedFluxoImage();
+                saveToLocalStorage();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderSavedFluxoImage() {
+            const placeholder = document.getElementById('fluxoPlaceholder');
+            const preview = document.getElementById('fluxoImagePreview');
+            if (!placeholder || !preview) return;
+
+            if (appData.fluxoImageData) {
+                placeholder.classList.add('hidden');
+                preview.src = appData.fluxoImageData;
+                preview.classList.remove('hidden');
+            } else {
+                placeholder.classList.remove('hidden');
+                preview.classList.add('hidden');
+            }
+        }
+
+        function handleFileAttachment(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+            for (let file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentAttachments.push({
+                        name: file.name,
+                        size: (file.size / 1024).toFixed(1) + ' KB',
+                        data: e.target.result
+                    });
+                    renderAttachmentPreviews();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderAttachmentPreviews() {
+            const preview = document.getElementById('attachmentPreview');
+            if (!preview) return;
+            preview.innerHTML = currentAttachments.map((att, idx) => `
+                <div class="flex items-center space-x-2 bg-slate-100 px-2 py-1 rounded border border-slate-200 text-xs">
+                    <i class="fa-solid fa-paperclip text-brand"></i>
+                    <span class="truncate max-w-[150px] font-medium">${att.name}</span>
+                    <button type="button" onclick="removeAttachment(${idx})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function removeAttachment(idx) {
+            currentAttachments.splice(idx, 1);
+            renderAttachmentPreviews();
+        }
+
+        function syncOverdueToDailyDemands() {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            const modulesToCheck = ['acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
+            modulesToCheck.forEach(mod => {
+                appData[mod].forEach(item => {
+                    if (item.status !== 'Concluído' && item.prazo) {
+                        const itemDate = parseDateBR(item.prazo);
+                        itemDate.setHours(0,0,0,0);
+                        if (itemDate <= today) {
+                            const exists = appData.demandas_dia.some(d => d.descricao === item.descricao);
+                            if (!exists) {
+                                appData.demandas_dia.push({
+                                    id: 'SYNC-' + Date.now() + '-' + Math.floor(Math.random()*1000),
+                                    descricao: `[Sincronizado] ${item.descricao}`,
+                                    prazo: item.prazo,
+                                    status: 'Em Andamento',
+                                    categoria: 'Urgente / Sincronizado',
+                                    anexos: item.anexos || []
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function getStatusBadge(prazoStr, status) {
+            if (status === 'Concluído') {
+                return `<span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-xs flex items-center space-x-1 w-fit"><i class="fa-solid fa-check"></i><span>Concluído</span></span>`;
+            }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const target = parseDateBR(prazoStr);
+            target.setHours(0,0,0,0);
+
+            const diffTime = target - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                const atraso = Math.abs(diffDays);
+                return `<span class="bg-red-100 text-red-800 font-bold px-2.5 py-1 rounded-full text-xs flex items-center space-x-1 w-fit"><i class="fa-solid fa-triangle-exclamation"></i><span>Atrasado (${atraso}d)</span></span>`;
+            } else if (diffDays === 0) {
+                return `<span class="bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-xs flex items-center space-x-1 w-fit"><i class="fa-solid fa-clock"></i><span>Vence Hoje</span></span>`;
+            } else {
+                return `<span class="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-full text-xs flex items-center space-x-1 w-fit"><i class="fa-regular fa-calendar"></i><span>Faltam ${diffDays}d</span></span>`;
+            }
+        }
+
+        function refreshAllViews() {
+            syncOverdueToDailyDemands();
+            saveToLocalStorage();
+            renderDashboard();
+            renderProjects();
+            renderGenericTable('demandas_dia');
+            renderGenericTable('acoes_semana');
+            renderGenericTable('cpia');
+            renderGenericTable('analise_falha');
+            renderGenericTable('documentacao');
+            renderSleepless();
+            renderMelhorias();
+        }
+
+        function renderDashboard() {
+            let total = 0, noTime = 0, delayed = 0, done = 0;
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            let farolVencidas = [];
+            let farol7 = [];
+            let farol30 = [];
+
+            const allModules = ['demandas_dia', 'acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
+            
+            allModules.forEach(mod => {
+                appData[mod].forEach(item => {
+                    total++;
+                    if (item.status === 'Concluído') {
+                        done++;
+                    } else {
+                        const target = parseDateBR(item.prazo);
+                        target.setHours(0,0,0,0);
+                        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+                        if (diffDays <= 0) {
+                            delayed++;
+                            farolVencidas.push({ desc: item.descricao, prazo: item.prazo });
+                        } else if (diffDays <= 7) {
+                            noTime++;
+                            farol7.push({ desc: item.descricao, prazo: item.prazo });
+                        } else if (diffDays <= 30) {
+                            noTime++;
+                            farol30.push({ desc: item.descricao, prazo: item.prazo });
+                        } else {
+                            noTime++;
+                        }
+                    }
+                });
+            });
+
+            appData.tiram_sono.forEach(item => {
+                item.acoes.forEach(ac => {
+                    total++;
+                    if (ac.status === 'Concluído') {
+                        done++;
+                    } else {
+                        const target = parseDateBR(ac.prazo);
+                        target.setHours(0,0,0,0);
+                        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+                        if (diffDays <= 0) {
+                            delayed++;
+                            farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                        } else if (diffDays <= 7) {
+                            noTime++;
+                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                        } else if (diffDays <= 30) {
+                            noTime++;
+                            farol30.push({ desc: `${item.name} - ${ac.desc}`, prazo: ac.prazo });
+                        } else {
+                            noTime++;
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statOnTime').innerText = noTime;
+            document.getElementById('statDelayed').innerText = delayed;
+            document.getElementById('statDone').innerText = done;
+
+            document.getElementById('farolVencidasCount').innerText = farolVencidas.length;
+            document.getElementById('farolVencidasList').innerHTML = farolVencidas.length ? farolVencidas.map(i => `<div class="p-2 bg-white rounded border border-red-200"><p class="font-semibold text-red-900 truncate">${i.desc}</p><span class="text-red-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item vencido.</p>';
+
+            document.getElementById('farol7DiasCount').innerText = farol7.length;
+            document.getElementById('farol7DiasList').innerHTML = farol7.length ? farol7.map(i => `<div class="p-2 bg-white rounded border border-amber-200"><p class="font-semibold text-amber-900 truncate">${i.desc}</p><span class="text-amber-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item nos próximos 7 dias.</p>';
+
+            document.getElementById('farol30DiasCount').innerText = farol30.length;
+            document.getElementById('farol30DiasList').innerHTML = farol30.length ? farol30.map(i => `<div class="p-2 bg-white rounded border border-blue-200"><p class="font-semibold text-blue-900 truncate">${i.desc}</p><span class="text-blue-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>';
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projectsContainer');
+            if (!container) return;
+
+            if (appData.projects.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhum projeto cadastrado. Clique em "Novo Projeto" para iniciar.</div>`;
+                return;
+            }
+
+            container.innerHTML = appData.projects.map((proj, idx) => `
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-brand-light text-brand text-xs font-bold px-2.5 py-1 rounded">${proj.system}</span>
+                                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded">Prioridade: ${proj.priority}</span>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mt-1">${proj.name}</h3>
+                            <p class="text-xs text-slate-600 mt-0.5">${proj.desc}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            ${getStatusBadge(proj.schedule, proj.status)}
+                            <button onclick="editProject(${idx})" class="p-2 text-slate-500 hover:text-brand"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProject(${idx})" class="p-2 text-slate-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div><strong class="text-slate-700">Escopo:</strong> ${proj.scope || '-'}</div>
+                        <div><strong class="text-slate-700">Equipes:</strong> ${proj.teams || '-'}</div>
+                        <div><strong class="text-slate-700">Custos / Capex:</strong> ${proj.cost || '-'}</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>Progresso Físico (Curva S)</span>
+                            <span>${proj.progress}%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-brand h-2.5 rounded-full transition-all duration-500" style="width: ${proj.progress}%"></div>
+                        </div>
+                    </div>
+                    ${proj.docs && proj.docs.length > 0 ? `
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-brand"></i> Documentação Vinculada</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                ${proj.docs.map(d => `
+                                    <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                        <div class="truncate mr-2">
+                                            <span class="font-semibold text-slate-800 block">${d.desc}</span>
+                                            <a href="${d.fileData}" download="${d.fileName}" class="text-brand hover:underline text-[11px]"><i class="fa-solid fa-download mr-1"></i>${d.fileName}</a>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function openModalProject(idx = null) {
+            document.getElementById('projectModal').classList.remove('hidden');
+            currentProjectDocs = [];
+            renderProjectDocsList();
+            if (idx !== null) {
+                const p = appData.projects[idx];
+                document.getElementById('projId').value = idx;
+                document.getElementById('projName').value = p.name;
+                document.getElementById('projSystem').value = p.system;
+                document.getElementById('projDesc').value = p.desc;
+                document.getElementById('projScope').value = p.scope;
+                document.getElementById('projTeams').value = p.teams;
+                document.getElementById('projSchedule').value = p.schedule;
+                document.getElementById('projCost').value = p.cost;
+                document.getElementById('projPriority').value = p.priority;
+                document.getElementById('projProgress').value = p.progress;
+                document.getElementById('projStatus').value = p.status;
+                currentProjectDocs = p.docs ? [...p.docs] : [];
+                renderProjectDocsList();
+                document.getElementById('projectModalTitle').innerText = 'Editar Projeto';
+            } else {
+                document.getElementById('projectForm').reset();
+                document.getElementById('projId').value = '';
+                document.getElementById('projectModalTitle').innerText = 'Novo Projeto';
+            }
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        function addProjectDoc() {
+            const desc = document.getElementById('projDocDescInput').value;
+            const fileInput = document.getElementById('projDocFileInput');
+            if (!desc || fileInput.files.length === 0) {
+                alert('Informe a descrição e selecione o arquivo.');
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentProjectDocs.push({
+                    desc: desc,
+                    fileName: file.name,
+                    fileData: e.target.result
+                });
+                document.getElementById('projDocDescInput').value = '';
+                fileInput.value = '';
+                renderProjectDocsList();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderProjectDocsList() {
+            const list = document.getElementById('projDocsList');
+            if (!list) return;
+            list.innerHTML = currentProjectDocs.map((d, i) => `
+                <div class="flex items-center justify-between bg-white p-1.5 rounded border">
+                    <span class="truncate"><strong>${d.desc}:</strong> ${d.fileName}</span>
+                    <button type="button" onclick="currentProjectDocs.splice(${i},1);renderProjectDocsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function saveProject(e) {
+            e.preventDefault();
+            const idx = document.getElementById('projId').value;
+            const item = {
+                name: document.getElementById('projName').value,
+                system: document.getElementById('projSystem').value,
+                desc: document.getElementById('projDesc').value,
+                scope: document.getElementById('projScope').value,
+                teams: document.getElementById('projTeams').value,
+                schedule: document.getElementById('projSchedule').value,
+                cost: document.getElementById('projCost').value,
+                priority: document.getElementById('projPriority').value,
+                progress: parseInt(document.getElementById('projProgress').value),
+                status: document.getElementById('projStatus').value,
+                docs: currentProjectDocs
+            };
+
+            if (idx !== '') {
+                appData.projects[idx] = item;
+            } else {
+                appData.projects.push(item);
+            }
+            closeProjectModal();
+            refreshAllViews();
+        }
+
+        function editProject(idx) { openModalProject(idx); }
+        function deleteProject(idx) {
+            if (confirm('Deseja realmente excluir este projeto?')) {
+                appData.projects.splice(idx, 1);
+                refreshAllViews();
+            }
+        }
+
+        function renderGenericTable(mod) {
+            const tbody = document.getElementById({
+                'demandas_dia': 'tableDemandasDia',
+                'acoes_semana': 'tableAcoesSemana',
+                'cpia': 'tableCpia',
+                'analise_falha': 'tableAf',
+                'documentacao': 'tableDoc',
+                'melhorias': 'tableMelhorias'
+            }[mod]);
+
+            if (!tbody) return;
+            const items = appData[mod];
+
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 italic">Nenhum registro encontrado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = items.map((item, idx) => {
+                if (mod === 'melhorias') {
+                    let diasCorridos = '-';
+                    if (item.dataSolicitacao) {
+                        const dtSol = parseDateBR(item.dataSolicitacao);
+                        const hoje = new Date();
+                        hoje.setHours(0,0,0,0);
+                        dtSol.setHours(0,0,0,0);
+                        const diff = Math.ceil((hoje - dtSol) / (1000 * 60 * 60 * 24));
+                        diasCorridos = diff >= 0 ? `${diff} dias correndo` : '0 dias';
+                    }
+
+                    return `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3">
+                                ${getStatusBadge(item.prazo, item.status)}
+                                <div class="text-[11px] text-slate-500 mt-1"><i class="fa-regular fa-clock mr-1"></i> ${diasCorridos}</div>
+                            </td>
+                            <td class="p-3">
+                                <span class="font-bold text-brand block mb-0.5">${item.sistema || ''}</span>
+                                <span class="text-slate-800">${item.descricao}</span>
+                            </td>
+                            <td class="p-3">
+                                <div class="font-medium text-slate-700">Sol: ${item.solicitante || '-'}</div>
+                                <div class="text-slate-500">MoC: ${item.moc || 'N/A'} | Ref: ${item.referencia || '-'}</div>
+                            </td>
+                            <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100" title="Marcar Concluído"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                if (mod === 'cpia') {
+                    return `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 font-bold text-slate-800">${item.idCpia || '-'}</td>
+                            <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
+                            <td class="p-3 text-slate-800">${item.descricao}</td>
+                            <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                if (mod === 'analise_falha') {
+                    return `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 font-bold text-slate-800">AF-${item.refAf || '-'}</td>
+                            <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
+                            <td class="p-3 text-slate-800">${item.descricao}</td>
+                            <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                if (mod === 'documentacao') {
+                    return `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3">
+                                <span class="font-bold text-brand block">${item.tipoAcao || 'Criação'}</span>
+                                <span class="text-slate-500">${item.tipoDoc || ''}</span>
+                            </td>
+                            <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
+                            <td class="p-3">
+                                <span class="text-slate-800 block">${item.descricao}</span>
+                                <span class="text-[11px] text-slate-500">Origem: ${item.origem || '-'}</span>
+                            </td>
+                            <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
+                        <td class="p-3 text-slate-800">${item.descricao}</td>
+                        <td class="p-3"><span class="bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">${item.categoria || 'Geral'}</span></td>
+                        <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                            <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAttachmentsCell(anexos) {
+            if (!anexos || anexos.length === 0) return '<span class="text-slate-400 italic">Nenhum</span>';
+            return anexos.map(a => `<a href="${a.data}" download="${a.name}" class="text-brand hover:underline block truncate max-w-[130px]"><i class="fa-solid fa-paperclip mr-1"></i>${a.name}</a>`).join('');
+        }
+
+        function toggleItemDone(mod, idx) {
+            appData[mod][idx].status = appData[mod][idx].status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            refreshAllViews();
+        }
+
+        function deleteItem(mod, idx) {
+            if (confirm('Deseja excluir este item?')) {
+                appData[mod].splice(idx, 1);
+                refreshAllViews();
+            }
+        }
+
+        function openModalItem(mod, idx = null) {
+            document.getElementById('genericModal').classList.remove('hidden');
+            document.getElementById('formModule').value = mod;
+            currentAttachments = [];
+            renderAttachmentPreviews();
+
+            const extra = document.getElementById('extraFields');
+            extra.innerHTML = '';
+
+            if (mod === 'demandas_dia' || mod === 'acoes_semana') {
+                extra.innerHTML = `
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Categoria da Demanda</label>
+                        <input type="text" id="extraCat" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                `;
+            } else if (mod === 'cpia') {
+                extra.innerHTML = `
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ID da Ação CPIA</label>
+                        <input type="text" id="extraIdCpia" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                `;
+            } else if (mod === 'analise_falha') {
+                extra.innerHTML = `
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Referência da AF (Ex: 042)</label>
+                        <input type="text" id="extraRefAf" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                `;
+            } else if (mod === 'documentacao') {
+                extra.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tipo de Ação</label>
+                            <select id="extraTipoAcao" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Criação">Criação</option>
+                                <option value="Revisão">Revisão</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Tipo de Documento</label>
+                            <input type="text" id="extraTipoDoc" placeholder="POP, Manual, Fluxograma..." required class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Origem da Demanda</label>
+                        <input type="text" id="extraOrigem" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                `;
+            } else if (mod === 'melhorias') {
+                extra.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Sistema Produtivo</label>
+                            <select id="extraSistema" class="w-full p-2 border border-slate-300 rounded-lg">
+                                ${PRODUCTION_SYSTEMS.map(s => `<option value="${s}">${s}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Solicitante</label>
+                            <input type="text" id="extraSolicitante" required class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Data da Solicitação</label>
+                            <input type="text" id="extraDataSol" placeholder="dd/mm/aaaa" required class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Exige MoC?</label>
+                            <select id="extraMoc" class="w-full p-2 border border-slate-300 rounded-lg">
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Referência (OM, Chamado)</label>
+                            <input type="text" id="extraRef" placeholder="OM 123456" class="w-full p-2 border border-slate-300 rounded-lg">
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (idx !== null) {
+                const item = appData[mod][idx];
+                document.getElementById('formItemId').value = idx;
+                document.getElementById('inputDesc').value = item.descricao || '';
+                document.getElementById('inputPrazo').value = item.prazo || '';
+                document.getElementById('inputStatus').value = item.status || 'Em Andamento';
+                currentAttachments = item.anexos ? [...item.anexos] : [];
+                renderAttachmentPreviews();
+
+                if (mod === 'demandas_dia' || mod === 'acoes_semana') {
+                    document.getElementById('extraCat').value = item.categoria || '';
+                } else if (mod === 'cpia') {
+                    document.getElementById('extraIdCpia').value = item.idCpia || '';
+                } else if (mod === 'analise_falha') {
+                    document.getElementById('extraRefAf').value = item.refAf || '';
+                } else if (mod === 'documentacao') {
+                    document.getElementById('extraTipoAcao').value = item.tipoAcao || 'Criação';
+                    document.getElementById('extraTipoDoc').value = item.tipoDoc || '';
+                    document.getElementById('extraOrigem').value = item.origem || '';
+                } else if (mod === 'melhorias') {
+                    document.getElementById('extraSistema').value = item.sistema || PRODUCTION_SYSTEMS[0];
+                    document.getElementById('extraSolicitante').value = item.solicitante || '';
+                    document.getElementById('extraDataSol').value = item.dataSolicitacao || formatDateBR(new Date());
+                    document.getElementById('extraMoc').value = item.moc || 'Não';
+                    document.getElementById('extraRef').value = item.referencia || '';
+                }
+
+                document.getElementById('modalTitle').innerText = 'Editar Item';
+            } else {
+                document.getElementById('genericForm').reset();
+                document.getElementById('formItemId').value = '';
+                document.getElementById('inputPrazo').value = formatDateBR(new Date());
+                if (mod === 'melhorias') {
+                    document.getElementById('extraDataSol').value = formatDateBR(new Date());
+                }
+                document.getElementById('modalTitle').innerText = 'Cadastrar Novo Item';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('genericModal').classList.add('hidden');
+        }
+
+        function saveGenericItem(e) {
+            e.preventDefault();
+            const mod = document.getElementById('formModule').value;
+            const idx = document.getElementById('formItemId').value;
+
+            let item = {
+                descricao: document.getElementById('inputDesc').value,
+                prazo: document.getElementById('inputPrazo').value,
+                status: document.getElementById('inputStatus').value,
+                anexos: currentAttachments
+            };
+
+            if (mod === 'demandas_dia' || mod === 'acoes_semana') {
+                item.categoria = document.getElementById('extraCat').value;
+            } else if (mod === 'cpia') {
+                item.idCpia = document.getElementById('extraIdCpia').value;
+            } else if (mod === 'analise_falha') {
+                item.refAf = document.getElementById('extraRefAf').value;
+            } else if (mod === 'documentacao') {
+                item.tipoAcao = document.getElementById('extraTipoAcao').value;
+                item.tipoDoc = document.getElementById('extraTipoDoc').value;
+                item.origem = document.getElementById('extraOrigem').value;
+            } else if (mod === 'melhorias') {
+                item.sistema = document.getElementById('extraSistema').value;
+                item.solicitante = document.getElementById('extraSolicitante').value;
+                item.dataSolicitacao = document.getElementById('extraDataSol').value;
+                item.moc = document.getElementById('extraMoc').value;
+                item.referencia = document.getElementById('extraRef').value;
+            }
+
+            if (idx !== '') {
+                appData[mod][idx] = item;
+            } else {
+                appData[mod].push(item);
+            }
+
+            closeModal();
+            refreshAllViews();
+        }
+
+        function renderSleepless() {
+            const container = document.getElementById('sleeplessContainer');
+            if (!container) return;
+
+            if (appData.tiram_sono.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhuma atividade crítica cadastrada.</div>`;
+                return;
+            }
+
+            container.innerHTML = appData.tiram_sono.map((item, idx) => {
+                const totalActions = item.acoes ? item.acoes.length : 0;
+                const completedActions = item.acoes ? item.acoes.filter(a => a.status === 'Concluído').length : 0;
+                const progressPercent = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-accent text-slate-900 text-xs font-bold px-2.5 py-1 rounded">${item.team}</span>
+                                    <span class="bg-brand-light text-brand text-xs font-bold px-2.5 py-1 rounded">${item.system}</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mt-1">${item.name}</h3>
+                                <p class="text-xs text-slate-600 mt-0.5">${item.desc}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                ${getStatusBadge(item.prazo, item.status)}
+                                <button onclick="editSleepless(${idx})" class="p-2 text-slate-500 hover:text-brand"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteSleepless(${idx})" class="p-2 text-slate-500 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Progresso do Plano de Ação (${completedActions}/${totalActions} concluídas)</span>
+                                <span>${progressPercent}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider"><i class="fa-solid fa-list-check mr-1 text-brand"></i> Plano de Ação Mitigadora</h4>
+                            ${item.acoes && item.acoes.length > 0 ? `
+                                <div class="space-y-2">
+                                    ${item.acoes.map((ac, acIdx) => `
+                                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-2.5 rounded border border-slate-200 gap-2 text-xs">
+                                            <div class="flex items-center space-x-2 flex-1">
+                                                <input type="checkbox" ${ac.status === 'Concluído' ? 'checked' : ''} onchange="toggleSleepActionDone(${idx}, ${acIdx})" class="w-4 h-4 text-brand rounded">
+                                                <span class="${ac.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${ac.desc}</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <span class="text-slate-500">Prazo: ${ac.prazo}</span>
+                                                <select onchange="updateSleepActionStatus(${idx}, ${acIdx}, this.value)" class="p-1 border rounded text-[11px] font-semibold ${ac.status === 'Concluído' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">
+                                                    <option value="À Iniciar" ${ac.status==='À Iniciar'?'selected':''}>À Iniciar</option>
+                                                    <option value="Em Andamento" ${ac.status==='Em Andamento'?'selected':''}>Em Andamento</option>
+                                                    <option value="Concluído" ${ac.status==='Concluído'?'selected':''}>Concluído</option>
+                                                    <option value="Atrasado" ${ac.status==='Atrasado'?'selected':''}>Atrasado</option>
+                                                </select>
+                                                <button onclick="removeSleepActionItem(${idx}, ${acIdx})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : '<p class="text-xs text-slate-500 italic">Nenhuma ação cadastrada no plano.</p>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openModalSleepless(idx = null) {
+            document.getElementById('sleeplessModal').classList.remove('hidden');
+            currentSleepActions = [];
+            renderSleepActionsList();
+            if (idx !== null) {
+                const s = appData.tiram_sono[idx];
+                document.getElementById('sleepId').value = idx;
+                document.getElementById('sleepName').value = s.name;
+                document.getElementById('sleepTeam').value = s.team;
+                document.getElementById('sleepSystem').value = s.system;
+                document.getElementById('sleepDesc').value = s.desc;
+                document.getElementById('sleepPrazo').value = s.prazo;
+                document.getElementById('sleepResp').value = s.resp;
+                currentSleepActions = s.acoes ? [...s.acoes] : [];
+                renderSleepActionsList();
+                document.getElementById('sleeplessModalTitle').innerText = 'Editar Atividade Crítica';
+            } else {
+                document.getElementById('sleeplessForm').reset();
+                document.getElementById('sleepId').value = '';
+                document.getElementById('sleepPrazo').value = formatDateBR(new Date());
+                document.getElementById('sleeplessModalTitle').innerText = 'Nova Atividade Crítica';
+            }
+        }
+
+        function closeSleeplessModal() {
+            document.getElementById('sleeplessModal').classList.add('hidden');
+        }
+
+        function addSleeplessAction() {
+            const desc = document.getElementById('actionDescInput').value;
+            const prazo = document.getElementById('actionPrazoInput').value;
+            if (!desc || !prazo) {
+                alert('Preencha a descrição e o prazo da ação.');
+                return;
+            }
+            currentSleepActions.push({
+                desc: desc,
+                prazo: prazo,
+                status: 'À Iniciar'
+            });
+            document.getElementById('actionDescInput').value = '';
+            document.getElementById('actionPrazoInput').value = '';
+            renderSleepActionsList();
+        }
+
+        function renderSleepActionsList() {
+            const list = document.getElementById('sleepActionsList');
+            if (!list) return;
+            list.innerHTML = currentSleepActions.map((a, i) => `
+                <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                    <div><strong>${a.desc}</strong> (Prazo: ${a.prazo}) - <span class="text-brand font-semibold">${a.status}</span></div>
+                    <button type="button" onclick="currentSleepActions.splice(${i},1);renderSleepActionsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function saveSleepless(e) {
+            e.preventDefault();
+            const idx = document.getElementById('sleepId').value;
+            let item = {
+                name: document.getElementById('sleepName').value,
+                team: document.getElementById('sleepTeam').value,
+                system: document.getElementById('sleepSystem').value,
+                desc: document.getElementById('sleepDesc').value,
+                prazo: document.getElementById('sleepPrazo').value,
+                resp: document.getElementById('sleepResp').value,
+                status: 'Em Andamento',
+                acoes: currentSleepActions
+            };
+
+            checkAndUpdateSleeplessMainStatus(item);
+
+            if (idx !== '') {
+                appData.tiram_sono[idx] = item;
+            } else {
+                appData.tiram_sono.push(item);
+            }
+            closeSleeplessModal();
+            refreshAllViews();
+        }
+
+        function editSleepless(idx) { openModalSleepless(idx); }
+        function deleteSleepless(idx) {
+            if (confirm('Deseja excluir esta atividade crítica?')) {
+                appData.tiram_sono.splice(idx, 1);
+                refreshAllViews();
+            }
+        }
+
+        function toggleSleepActionDone(sleepIdx, acIdx) {
+            const ac = appData.tiram_sono[sleepIdx].acoes[acIdx];
+            ac.status = ac.status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            checkAndUpdateSleeplessMainStatus(appData.tiram_sono[sleepIdx]);
+            refreshAllViews();
+        }
+
+        function updateSleepActionStatus(sleepIdx, acIdx, newStatus) {
+            appData.tiram_sono[sleepIdx].acoes[acIdx].status = newStatus;
+            checkAndUpdateSleeplessMainStatus(appData.tiram_sono[sleepIdx]);
+            refreshAllViews();
+        }
+
+        function checkAndUpdateSleeplessMainStatus(sleepItem) {
+            if (!sleepItem.acoes || sleepItem.acoes.length === 0) return;
+            const allDone = sleepItem.acoes.every(a => a.status === 'Concluído');
+            if (allDone) {
+                sleepItem.status = 'Concluído';
+            } else {
+                if (sleepItem.status === 'Concluído') {
+                    sleepItem.status = 'Em Andamento';
+                }
+            }
+        }
+
+        function removeSleepActionItem(sleepIdx, acIdx) {
+            appData.tiram_sono[sleepIdx].acoes.splice(acIdx, 1);
+            checkAndUpdateSleeplessMainStatus(appData.tiram_sono[sleepIdx]);
+            refreshAllViews();
+        }
+
+        function renderGlossary(filter = '') {
+            const container = document.getElementById('glossaryContainer');
+            if (!container) return;
+
+            const filtered = GLOSSARY_DATA.filter(g => 
+                g.term.toLowerCase().includes(filter.toLowerCase()) || 
+                g.desc.toLowerCase().includes(filter.toLowerCase()) ||
+                g.category.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-2 text-center text-slate-500 italic p-6">Nenhum termo encontrado.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(g => `
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:border-brand transition">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="font-bold text-slate-900 text-sm">${g.term}</h3>
+                        <span class="bg-brand-light text-brand text-[10px] font-bold px-2 py-0.5 rounded">${g.category}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">${g.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        function filterGlossary() {
+            const val = document.getElementById('glossarySearch').value;
+            renderGlossary(val);
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_engenharia_processos_${formatDateBR(new Date()).replace(/\//g,'-')}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function(e) {
+                    try {
+                        appData = JSON.parse(e.target.result);
+                        renderSavedFluxoImage();
+                        refreshAllViews();
+                        alert('Backup restaurado com sucesso!');
+                    } catch (err) {
+                        alert('Erro ao ler arquivo de backup JSON.');
+                    }
+                };
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('rail_engineering_app_data', JSON.stringify(appData));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('rail_engineering_app_data');
+            if (saved) {
+                try {
+                    appData = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Erro ao carregar dados locais', e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
