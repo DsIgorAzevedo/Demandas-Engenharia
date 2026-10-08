@@ -26,6 +26,8 @@
     </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .mobile-view { max-width: 414px; margin: 0 auto; box-shadow: 0 0 25px rgba(0,0,0,0.15); border: 8px solid #333; border-radius: 24px; min-height: 850px; overflow: hidden; background: #f8fafc; }
     </style>
@@ -111,8 +113,9 @@
                         </h2>
                         <p class="text-xs text-slate-500">Visão consolidada de todas as frentes, prazos e status operacionais.</p>
                     </div>
-                    <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium">
-                        <i class="fa-regular fa-calendar text-brand mr-1"></i> Data Base: <span id="currentDateDisplay"></span>
+                    <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium flex items-center space-x-2">
+                        <span><i class="fa-regular fa-calendar text-brand mr-1"></i> Data Base: <span id="currentDateDisplay"></span></span>
+                        <span id="syncStatus" class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-cloud"></i> Supabase Conectado</span>
                     </div>
                 </div>
 
@@ -182,39 +185,6 @@
                                 <p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. FLUXO DE OPERAÇÕES (TFA) - IMAGEM EM ALTA DEFINIÇÃO -->
-            <section id="tab-fluxo_tfa" class="tab-content hidden space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
-                        <div>
-                            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                                <i class="fa-solid fa-route text-brand"></i>
-                                <span>Fluxograma Operacional (TFA) - Documento Oficial</span>
-                            </h2>
-                            <p class="text-xs text-slate-500 mt-1">Diagrama esquemático oficial sem dados de capacidades ou comprimentos.</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <label class="bg-brand text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-brand-dark transition flex items-center space-x-1.5 shadow">
-                                <i class="fa-solid fa-file-arrow-up"></i>
-                                <span>Carregar Imagem do Fluxograma (PDF/PNG)</span>
-                                <input type="file" id="fluxoImageInput" accept="image/*,.pdf" onchange="loadFluxoImage(event)" class="hidden">
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="fluxoDisplayContainer" class="flex flex-col items-center justify-center bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 p-8 min-h-[500px]">
-                        <div id="fluxoPlaceholder" class="text-center space-y-3">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow mx-auto text-brand text-2xl">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-700 text-sm">Nenhuma imagem carregada do fluxograma</h3>
-                            <p class="text-xs text-slate-500 max-w-md">Clique no botão acima para carregar a imagem em alta definição do fluxograma extraída do documento original.</p>
-                        </div>
-                        <img id="fluxoImagePreview" class="hidden max-w-full h-auto rounded-xl shadow-md border border-slate-200 object-contain max-h-[750px]" alt="Fluxograma Operacional TFA">
                     </div>
                 </div>
             </section>
@@ -622,8 +592,17 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE LÓGICA E DADOS -->
+    <!-- SCRIPT DE LÓGICA E DADOS COM SUPABASE -->
     <script>
+        // CONFIGURAÇÃO DO SUPABASE (Insira suas chaves aqui)
+        const SUPABASE_URL = 'https://cvqhwndnjutmmofjuosk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_aKsMVDlWlJjh_nngCxzvdg_E6SC8Xuz';
+        
+        let supabaseClient = null;
+        if (window.supabase && SUPABASE_URL !== 'SUA_SUPABASE_URL') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
         const PRODUCTION_SYSTEMS = [
             "TLCD PICO",
             "TCLD VGR 1",
@@ -637,66 +616,107 @@
         ];
 
         const GLOSSARY_DATA = [
-            // Gestão de Projetos & Finanças
-            { term: "CAPEX (Capital Expenditure)", category: "Gestão de Projetos & Finanças", desc: "Investimentos em bens de capital, ativos fixos, expansão de capacidade produtiva, novas instalações e modernização de equipamentos na expedição ferroviária." },
-            { term: "OPEX (Operational Expenditure)", category: "Gestão de Projetos & Finanças", desc: "Despesas operacionais recorrentes de manutenção, energia elétrica, insumos, operação e suporte para manter os ativos rodando." },
-            { term: "Curva S", category: "Gestão de Projetos & Finanças", desc: "Gráfico de progresso acumulado do projeto versus tempo, essencial para monitorar o avanço físico e financeiro do empreendimento." },
-            { term: "FEL (Front-End Loading)", category: "Gestão de Projetos & Finanças", desc: "Metodologia de estruturação e maturação de projetos dividida em FEL 1 (Conceitual), FEL 2 (Viabilidade/Pré-projeto) e FEL 3 (Projeto Básico/Detalhado)." },
-            { term: "As-Built", category: "Gestão de Projetos & Finanças", desc: "Documentação técnica atualizada e revisada refletindo exatamente como a instalação ou equipamento foi construído e montado em campo." },
-            { term: "EAP (Estrutura Analítica do Projeto / WBS)", category: "Gestão de Projetos & Finanças", desc: "Decomposição hierárquica do escopo total do projeto em entregas menores e gerenciáveis." },
-            { term: "Baseline (Linha de Base)", category: "Gestão de Projetos & Finanças", desc: "Versão aprovada do cronograma, orçamento e escopo usada como referência para medição de desvios." },
+            // Projetos e Investimentos
+            { term: "CAPEX (Capital Expenditure)", category: "Projetos e Investimentos", desc: "Investimentos destinados à aquisição, ampliação ou modernização de ativos permanentes, como equipamentos, instalações e infraestrutura." },
+            { term: "OPEX (Operational Expenditure)", category: "Projetos e Investimentos", desc: "Despesas necessárias para manter a operação funcionando, como manutenção, energia, materiais de consumo e contratos de serviços." },
+            { term: "TAP (Termo de Abertura de Projeto)", category: "Projetos e Investimentos", desc: "Documento que formaliza o início de um projeto, definindo objetivos, escopo, responsáveis e recursos iniciais." },
+            { term: "FEL (Front-End Loading)", category: "Projetos e Investimentos", desc: "Metodologia de desenvolvimento de projetos que busca reduzir riscos através do detalhamento progressivo antes da aprovação dos investimentos." },
+            { term: "Gate", category: "Projetos e Investimentos", desc: "Ponto formal de decisão em um projeto onde é avaliado se ele pode avançar para a próxima fase." },
+            { term: "Baseline", category: "Projetos e Investimentos", desc: "Linha de base aprovada do projeto, utilizada como referência para comparar prazo, custo e escopo ao longo da execução." },
+            { term: "Curva S", category: "Projetos e Investimentos", desc: "Gráfico que mostra a evolução acumulada do progresso físico ou financeiro de um projeto ao longo do tempo." },
+            { term: "EAP (Estrutura Analítica do Projeto)", category: "Projetos e Investimentos", desc: "Decomposição hierárquica do escopo do projeto em entregas e pacotes de trabalho." },
+            { term: "Cronograma", category: "Projetos e Investimentos", desc: "Planejamento temporal das atividades do projeto, indicando datas de início, término e dependências." },
+            { term: "Stakeholder", category: "Projetos e Investimentos", desc: "Pessoa, grupo ou organização que pode influenciar ou ser impactada pelo projeto." },
+            { term: "Escopo", category: "Projetos e Investimentos", desc: "Conjunto de entregas, atividades e objetivos que fazem parte do projeto." },
+            { term: "Marco (Milestone)", category: "Projetos e Investimentos", desc: "Evento importante que representa a conclusão de uma etapa relevante do projeto." },
+            { term: "Caminho Crítico", category: "Projetos e Investimentos", desc: "Sequência de atividades que determina a duração mínima do projeto." },
 
-            // Indicadores & KPIs
-            { term: "DF / UF", category: "Indicadores & KPIs", desc: "Disponibilidade Física (DF) e Utilização Física (UF), métricas fundamentais de OEE para medir o tempo operacional efetivo e a prontidão dos ativos." },
-            { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores & KPIs", desc: "Índice de Eficiência Global dos Equipamentos, calculado pelo produto de Disponibilidade x Desempenho x Qualidade." },
-            { term: "MTBF / MTTR", category: "Indicadores & KPIs", desc: "Mean Time Between Failures (Tempo Médio entre Falhas) e Mean Time To Repair (Tempo Médio para Reparo), medindo confiabilidade e mantenabilidade." },
-            { term: "Taxa de Ocupação da Expedição", category: "Indicadores & KPIs", desc: "Métrica operacional que avalia o percentual de tempo em que os circuitos de carregamento de vagões e trens estão efetivamente operando com carga." },
-            { term: "Backlog de Manutenção", category: "Indicadores & KPIs", desc: "Volume de serviços de manutenção pendentes de execução, medido em homem-horas ou semanas de trabalho acumuladas." },
+            // Custos e Viabilidade Econômica
+            { term: "ROI (Return on Investment)", category: "Custos e Viabilidade Econômica", desc: "Indicador que mede o retorno financeiro obtido em relação ao investimento realizado." },
+            { term: "TIR (Taxa Interna de Retorno)", category: "Custos e Viabilidade Econômica", desc: "Taxa de desconto que faz o valor presente líquido de um investimento ser igual a zero." },
+            { term: "VPL (Valor Presente Líquido)", category: "Custos e Viabilidade Econômica", desc: "Diferença entre receitas futuras descontadas e o investimento inicial." },
+            { term: "EBITDA", category: "Custos e Viabilidade Econômica", desc: "Indicador financeiro que representa o resultado operacional antes de juros, impostos, depreciação e amortização." },
+            { term: "Payback", category: "Custos e Viabilidade Econômica", desc: "Tempo necessário para recuperar o valor investido em um projeto." },
+            { term: "Fluxo de Caixa", category: "Custos e Viabilidade Econômica", desc: "Movimentação de entradas e saídas de recursos financeiros ao longo do tempo." },
+            { term: "Custo de Ciclo de Vida (LCC)", category: "Custos e Viabilidade Econômica", desc: "Avaliação de todos os custos associados a um ativo durante sua vida útil." },
 
-            // Transportadores de Correia e Componentes
-            { term: "Transportador de Correia (Belt Conveyor)", category: "Transportadores de Correia", desc: "Sistema contínuo de movimentação de minério a granel composto por correia emborrachada, tambores de acionamento/retorno, roletes de carga e impacto." },
-            { term: "Roletes de Carga e Retorno (Idlers)", category: "Transportadores de Correia", desc: "Conjuntos de rolos cilíndricos com rolamentos blindados que suportam a correia carregada (carga) e o retorno do ramal vazio." },
-            { term: "Roletes de Impacto", category: "Transportadores de Correia", desc: "Roletes dotados de anéis de borracha absorvedora de choques, posicionados diretamente sob as zonas de transferência e moegas de carga." },
-            { term: "Tambor de Acionamento (Drive Pulley)", category: "Transportadores de Correia", desc: "Tambor revestido de borracha (lagging) conectado ao motoredutor responsável por transmitir a tração e movimentar a correia." },
-            { term: "Tambor de Retorno e Esticamento", category: "Transportadores de Correia", desc: "Tambores localizados nas extremidades opostas e na torre de estiramento para garantir o alinhamento e a tensão adequada da correia." },
-            { term: "Sistema de Esticamento (Take-Up)", category: "Transportadores de Correia", desc: "Conjunto de contrapesos ou guinchos hidráulicos/elétricos que mantêm a tensão constante na correia, compensando dilatações e estiramentos." },
-            { term: "Raspadores de Correia (Primary & Secondary Cleaners)", category: "Transportadores de Correia", desc: "Lâminas de poliuretano ou metal instaladas no tambor de descarga para remover o minério aderido (finesse), evitando o retorno de material (carry-back)." },
-            { term: "Chicote / Desalinhamento de Correia", category: "Transportadores de Correia", desc: "Anomalia onde a correia desvia lateralmente do eixo central, podendo causar danos severos às bordas e derrames de material." },
-            { term: "Skirtboard (Saias de Vedação)", category: "Transportadores de Correia", desc: "Placas laterais e borrachas de vedação instaladas nas calhas de transferência para conter o fluxo de minério e evitar emissão de poeira." },
-            { term: "Calha de Transferência (Chute)", category: "Transportadores de Correia", desc: "Estrutura metálica interna revestida com placas de desgaste (cerâmica ou aço anti-abrasivo) que direciona o minério de uma correia para outra." },
-            { term: "Sensor de Desvio / Corda de Emergência (Pull Cord)", category: "Transportadores de Correia", desc: "Dispositivos de segurança intertravados com o CLP para desligar imediatamente o transportador em caso de emergência ou desalinhamento crítico." },
+            // Indicadores e Gestão
+            { term: "KPI (Key Performance Indicator)", category: "Indicadores e Gestão", desc: "Indicador-chave utilizado para medir o desempenho de um processo ou objetivo." },
+            { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores e Gestão", desc: "Indicador de eficiência global dos equipamentos baseado em disponibilidade, desempenho e qualidade." },
+            { term: "MTBF (Mean Time Between Failures)", category: "Indicadores e Gestão", desc: "Tempo médio entre falhas de um equipamento." },
+            { term: "MTTR (Mean Time To Repair)", category: "Indicadores e Gestão", desc: "Tempo médio necessário para reparar um equipamento após uma falha." },
+            { term: "Disponibilidade Física (DF)", category: "Indicadores e Gestão", desc: "Percentual do tempo em que um equipamento está apto a operar." },
+            { term: "Utilização Física (UF)", category: "Indicadores e Gestão", desc: "Percentual do tempo disponível em que o equipamento foi efetivamente utilizado." },
+            { term: "Confiabilidade", category: "Indicadores e Gestão", desc: "Probabilidade de um equipamento desempenhar sua função sem falhar durante determinado período." },
+            { term: "Produtividade", category: "Indicadores e Gestão", desc: "Relação entre a produção obtida e os recursos utilizados." },
+            { term: "Throughput", category: "Indicadores e Gestão", desc: "Quantidade de material processado ou transportado em determinado período." },
+            { term: "SLA (Service Level Agreement)", category: "Indicadores e Gestão", desc: "Acordo que estabelece níveis mínimos de desempenho de um serviço." },
 
-            // Recuperadoras e Empilhadeiras de Minério
-            { term: "Recuperadora de Minério (Bucket Wheel Reclaimer)", category: "Recuperadoras & Pátio", desc: "Equipamento de grande porte dotado de roda de caçambas na extremidade de uma lança giratória para desestocagem contínua das pilhas do pátio." },
-            { term: "Empilhadeira de Minério (Stacker)", category: "Recuperadoras & Pátio", desc: "Máquina operatriz com lança transportadora móvel destinada à formação controlada de pilhas de estocagem de minério no pátio." },
-            { term: "Lança da Recuperadora (Boom)", category: "Recuperadoras & Pátio", desc: "Estrutura treliçada metálica de longo alcance que suporta a correia de lança e a roda de caçambas, com movimentos de translação, slewing (giro) e luffing (inclinação)." },
-            { term: "Mecanismo de Giro (Slewing Drive)", category: "Recuperadoras & Pátio", desc: "Conjunto coroa-pinhão acionado por motoredutores que permite o giro horizontal da lança da recuperadora sobre a estocagem." },
-            { term: "Caçambas (Buckets)", category: "Recuperadoras & Pátio", desc: "Canecas de aço antidesgaste fixadas na periferia da roda rotativa da recuperadora para escavar e retirar o minério da pilha." },
-            { term: "Harrow (Grade Scarifier)", category: "Recuperadoras & Pátio", desc: "Dispositivo mecânico oscilante acoplado à recuperadora que desmorona o talude da pilha de minério de forma homogênea em direção à base." },
+            // Segurança
+            { term: "RAC (Requisitos de Atividades Críticas)", category: "Segurança", desc: "Conjunto de regras corporativas para controlar atividades de alto risco." },
+            { term: "APR (Análise Preliminar de Risco)", category: "Segurança", desc: "Ferramenta utilizada para identificar perigos e definir controles antes da execução de uma atividade." },
+            { term: "PT (Permissão de Trabalho)", category: "Segurança", desc: "Documento formal que autoriza a execução de determinadas atividades." },
+            { term: "LOTO (Lockout/Tagout)", category: "Segurança", desc: "Procedimento de bloqueio e etiquetagem para impedir energização acidental." },
+            { term: "Bow Tie", category: "Segurança", desc: "Metodologia gráfica que relaciona causas, controles preventivos, evento crítico e consequências." },
+            { term: "Incidente", category: "Segurança", desc: "Evento não planejado que poderia ter resultado em perdas." },
+            { term: "Acidente", category: "Segurança", desc: "Evento não planejado que gera danos a pessoas, equipamentos ou meio ambiente." },
+            { term: "Quase Acidente (Near Miss)", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
+            { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
+            { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
 
-            // Alimentadores de Sapata e Equipamentos de Extração
-            { term: "Alimentador de Sapata (Apron Feeder)", category: "Alimentadores & Moegas", desc: "Alimentador robusto composto por placas articuladas de aço de alta resistência, projetado para extração sob forte impacto de minério bruto de moegas e silos." },
-            { term: "Alimentador Vibratório (Vibrating Feeder)", category: "Alimentadores & Moegas", desc: "Equipamento acionado por motovibradores que utiliza vibração controlada para dosar a vazão de extração de minério a granel." },
-            { term: "Moega de Recebimento (Hopper / Bin)", category: "Alimentadores & Moegas", desc: "Estrutura troncônica ou piramidal robusta para recepção e estocagem temporária de minério descarregado por caminhões ou vagões." },
-            { term: "Placas Articuladas (Apron Pans)", category: "Alimentadores & Moegas", desc: "Elos metálicos sobrepostos e parafusados que formam a esteira contínua de um alimentador de sapata." },
-            { term: "Corrente de Alta Resistência", category: "Alimentadores & Moegas", desc: "Correntes de pinos e buchas endurecidas que tracionam as sapatas do alimentador sob cargas estáticas e dinâmicas elevadas." },
+            // Engenharia e Documentação
+            { term: "As Built", category: "Engenharia e Documentação", desc: "Documentação atualizada refletindo exatamente como o empreendimento foi executado em campo." },
+            { term: "DF (Disponibilidade Física)", category: "Engenharia e Documentação", desc: "Indicador da porcentagem de tempo que um equipamento esteve apto para operação." },
+            { term: "UF (Utilização Física)", category: "Engenharia e Documentação", desc: "Indicador da porcentagem do tempo disponível em que o equipamento operou." },
+            { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
+            { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
+            { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
+            { term: "Diagrama Unifilar", category: "Engenharia e Documentação", desc: "Representação simplificada de sistemas elétricos." },
+            { term: "Fluxograma", category: "Engenharia e Documentação", desc: "Representação gráfica de um processo." },
+            { term: "Revisão de Projeto", category: "Engenharia e Documentação", desc: "Atualização formal de documentos de engenharia." },
+            { term: "Comissionamento", category: "Engenharia e Documentação", desc: "Processo de verificação e testes para garantir que sistemas atendam aos requisitos de projeto." },
 
-            // Estocagem de Minério e Pátios
-            { term: "Pátio de Estocagem (Stockyard)", category: "Estocagem & Pátios", desc: "Área industrial descoberta destinada à formação de pilhas de minério (homogeneização e pulmão) para garantir vazão contínua aos trens." },
-            { term: "Pilha Longitudinal / Pilha Circular", category: "Estocagem & Pátios", desc: "Geometrias de formação de pilhas no pátio; a longitudinal é empilhada linearmente por empilhadeiras sobre trilhos, e a circular por braço central." },
-            { term: "Blending (Homogeneização)", category: "Estocagem & Pátios", desc: "Processo de mistura de diferentes teores e granulometrias de minério durante o empilhamento e recuperação para garantir especificação química estável na expedição." },
-            { term: "Drenagem de Pátio", category: "Estocagem & Pátios", desc: "Sistema de canaletas, caixas coletoras e bacias de decantação para captação de águas pluviais e escoamento de finos de minério." },
+            // Elementos de Máquinas
+            { term: "Mancal", category: "Elementos de Máquinas", desc: "Elemento que apoia e guia eixos rotativos." },
+            { term: "Eixo", category: "Elementos de Máquinas", desc: "Componente mecânico responsável por transmitir torque e movimento." },
+            { term: "Acoplamento", category: "Elementos de Máquinas", desc: "Dispositivo utilizado para conectar dois eixos." },
+            { term: "Redutor", category: "Elementos de Máquinas", desc: "Equipamento destinado a reduzir velocidade e aumentar torque." },
+            { term: "Chaveta", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir torque entre eixo e cubo." },
+            { term: "Volante de Inércia", category: "Elementos de Máquinas", desc: "Componente que armazena energia cinética e reduz oscilações de velocidade." },
+            { term: "Braço de Torque", category: "Elementos de Máquinas", desc: "Estrutura utilizada para absorver reações de torque em redutores e equipamentos." },
+            { term: "Rolamento", category: "Elementos de Máquinas", desc: "Elemento mecânico que reduz atrito entre partes móveis." },
+            { term: "Correia Transportadora", category: "Elementos de Máquinas", desc: "Elemento flexível utilizado para movimentação contínua de materiais." },
+            { term: "Tambor", category: "Elementos de Máquinas", desc: "Componente cilíndrico que traciona ou direciona correias transportadoras." },
+            { term: "Polia", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmissão de potência por correias." },
+            { term: "Engrenagem", category: "Elementos de Máquinas", desc: "Componente mecânico utilizado para transmissão de movimento e torque." },
+            { term: "Corrente de Transmissão", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir potência entre eixos." },
 
-            // Elementos de Máquinas e Acionamentos
-            { term: "Volante de Inércia", category: "Elementos de Máquinas", desc: "Dispositivo mecânico rotativo projetado para armazenar energia cinética, suavizando flutuações de torque em acionamentos pesados." },
-            { term: "Redutor de Velocidade & Acoplamentos", category: "Elementos de Máquinas", desc: "Conjuntos mecânicos responsáveis pela redução de rotação e transmissão de torque dos motores elétricos para os tambores de correias." },
-            { term: "Freio de Contrarrecuo (Backstop)", category: "Elementos de Máquinas", desc: "Dispositivo mecânico de segurança instalado em transportadores inclinados para impedir o retrocesso indesejado da correia carregada quando o motor é desenergizado." },
-            { term: "Acoplamento Hidrodinâmico (Fluid Coupling)", category: "Elementos de Máquinas", desc: "Acoplamento que utiliza óleo para transmitir torque de forma suave, permitindo partidas sem pico excessivo de corrente nos motores." },
-
-            // Segurança & Processos
-            { term: "MoC (Management of Change / Gestão de Mudança)", category: "Segurança & Processos", desc: "Processo formal de avaliação, aprovação e registro de alterações físicas, operacionais ou documentais para mitigar riscos de segurança e operacionais." },
-            { term: "CPIA", category: "Segurança & Processos", desc: "Comissão ou plano de ação focado em investigações de incidentes, desvios e planos de mitigação de riscos operacionais." },
-            { term: "LOTO (Lockout / Tagout)", category: "Segurança & Processos", desc: "Procedimento padrão de bloqueio, etiquetagem e teste de energia zero em equipamentos antes de intervenções de manutenção." }
+            // Equipamentos de Expedição Ferroviária e Manuseio de Minério
+            { term: "TCLD (Transportador de Correia de Longa Distância)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de correias utilizado para transporte de minério em grandes distâncias." },
+            { term: "Recuperadora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para retomar material estocado em pilhas." },
+            { term: "Empilhadeira de Minério", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado à formação de pilhas de estocagem." },
+            { term: "Hopper", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura de armazenamento temporário e alimentação de material." },
+            { term: "Alimentador de Sapata", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para dosagem e alimentação controlada de material." },
+            { term: "Virador de Vagões", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para descarregar vagões através da rotação da composição." },
+            { term: "Carregador de Navios", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado ao carregamento de minério em embarcações." },
+            { term: "Chute", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura que direciona o fluxo de material entre equipamentos." },
+            { term: "Pátio de Estocagem", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Área destinada à formação e armazenamento de pilhas de minério." },
+            { term: "Pilha Pulmão", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estoque intermediário destinado a garantir continuidade operacional." },
+            { term: "Retomada", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Processo de retirada de material de uma pilha." },
+            { term: "Empilhamento", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Processo de formação de pilhas de minério." },
+            { term: "Balança Integradora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para medição contínua da massa transportada por correias." },
+            { term: "Detector de Metais", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de proteção utilizado para identificar objetos metálicos indesejados." },
+            { term: "Separador Magnético", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para remoção de partículas metálicas ferromagnéticas." },
+            { term: "Transportador de Correia", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para movimentação contínua de materiais sólidos." },
+            { term: "Estação de Transferência", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Ponto onde ocorre a transferência de material entre transportadores." },
+            { term: "Contaminação de Produto", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Mistura indesejada entre differentes tipos ou qualidades de minério." },
+            { term: "Taxa de Alimentação", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Quantidade de material alimentado por unidade de tempo, normalmente expressa em t/h." },
+            { term: "Tempo de Residência", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Tempo médio que um material permanece armazenado antes de ser retomado." },
+            { term: "Capacidade Nominal", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Capacidade máxima de projeto de um equipamento ou sistema." },
+            { term: "Gargalo", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Recurso ou etapa que limita a capacidade produtiva de um processo." },
+            { term: "TMC (Tempo Médio de Ciclo)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Tempo necessário para completar um ciclo operacional." },
+            { term: "Disponibilidade Operacional", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Percentual de tempo em que o sistema está disponível considerando manutenção e operação." },
+            { term: "Recuperação Operacional", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Percentual de material efetivamente recuperado em relação ao planejado." }
         ];
 
         let appData = {
@@ -716,8 +736,8 @@
         let currentSleepActions = [];
         let isMobileLayout = false;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadFromLocalStorage();
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadFromSupabase();
             populateSelects();
             setDateDisplay();
             renderGlossary();
@@ -793,7 +813,7 @@
             reader.onload = function(e) {
                 appData.fluxoImageData = e.target.result;
                 renderSavedFluxoImage();
-                saveToLocalStorage();
+                saveToSupabase();
             };
             reader.readAsDataURL(file);
         }
@@ -900,7 +920,7 @@
 
         function refreshAllViews() {
             syncOverdueToDailyDemands();
-            saveToLocalStorage();
+            saveToSupabase();
             renderDashboard();
             renderProjects();
             renderGenericTable('demandas_dia');
@@ -1702,8 +1722,67 @@
             }
         }
 
-        function saveToLocalStorage() {
+        // --- INTEGRAÇÃO COM SUPABASE ---
+        async function saveToSupabase() {
+            // Salva também localmente como contingência
             localStorage.setItem('rail_engineering_app_data', JSON.stringify(appData));
+
+            if (!supabaseClient) {
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) {
+                    statusEl.className = 'text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Usando LocalStorage (Supabase não configurado)';
+                }
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('app_state')
+                    .upsert({ id: 1, data: appData, updated_at: new Date() });
+
+                if (error) throw error;
+
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) {
+                    statusEl.className = 'text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold';
+                    statusEl.innerHTML = '<i class="fa-solid fa-cloud"></i> Sincronizado com Supabase';
+                }
+            } catch (err) {
+                console.error('Erro ao salvar no Supabase:', err);
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) {
+                    statusEl.className = 'text-[10px] bg-red-100 text-red-800 px-2 py-0.5 rounded font-bold';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Erro de Sincronização Supabase';
+                }
+            }
+        }
+
+        async function loadFromSupabase() {
+            if (!supabaseClient) {
+                loadFromLocalStorage();
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('app_state')
+                    .select('data')
+                    .eq('id', 1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') throw error; // PGRST116 = row not found
+
+                if (data && data.data) {
+                    appData = data.data;
+                } else {
+                    // Tenta carregar do localStorage se não houver na nuvem ainda
+                    loadFromLocalStorage();
+                }
+            } catch (err) {
+                console.error('Erro ao carregar do Supabase, buscando localmente:', err);
+                loadFromLocalStorage();
+            }
         }
 
         function loadFromLocalStorage() {
