@@ -50,38 +50,43 @@
 
             <!-- Menu de Abas Lateral -->
             <nav class="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
-                <button onclick="switchTab('dashboard')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-white bg-brand shadow-inner flex items-center space-x-2.5" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-pie w-4 text-center"></i><span>Dashboard & Farol</span>
+                <button onclick="switchTab('dashboard')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-white bg-brand shadow-inner flex items-center justify-between" data-tab="dashboard">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-chart-pie w-4 text-center"></i><span>Dashboard & Farol</span></div>
                 </button>
-                <button onclick="switchTab('fluxo_tfa')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="fluxo_tfa">
-                    <i class="fa-solid fa-route w-4 text-center"></i><span>Fluxo de Operações (TFA)</span>
+                <button onclick="switchTab('projetos')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="projetos">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-diagram-project w-4 text-center"></i><span>Gestão de Projetos</span></div>
+                    <span id="badge-projetos" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('projetos')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="projetos">
-                    <i class="fa-solid fa-diagram-project w-4 text-center"></i><span>Gestão de Projetos</span>
+                <button onclick="switchTab('demandas_dia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="demandas_dia">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-calendar-day w-4 text-center"></i><span>Demandas do Dia</span></div>
+                    <span id="badge-demandas_dia" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('demandas_dia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="demandas_dia">
-                    <i class="fa-solid fa-calendar-day w-4 text-center"></i><span>Demandas do Dia</span>
+                <button onclick="switchTab('acoes_semana')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="acoes_semana">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-calendar-week w-4 text-center"></i><span>Ações da Semana</span></div>
+                    <span id="badge-acoes_semana" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('acoes_semana')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="acoes_semana">
-                    <i class="fa-solid fa-calendar-week w-4 text-center"></i><span>Ações da Semana</span>
+                <button onclick="switchTab('cpia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="cpia">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-clipboard-check w-4 text-center"></i><span>Ações CPIA</span></div>
+                    <span id="badge-cpia" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('cpia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="cpia">
-                    <i class="fa-solid fa-clipboard-check w-4 text-center"></i><span>Ações CPIA</span>
+                <button onclick="switchTab('analise_falha')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="analise_falha">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i><span>Análise de Falha (AF)</span></div>
+                    <span id="badge-analise_falha" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('analise_falha')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="analise_falha">
-                    <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i><span>Análise de Falha (AF)</span>
+                <button onclick="switchTab('documentacao')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="documentacao">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-file-lines w-4 text-center"></i><span>Documentação</span></div>
+                    <span id="badge-documentacao" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('documentacao')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="documentacao">
-                    <i class="fa-solid fa-file-lines w-4 text-center"></i><span>Documentação</span>
+                <button onclick="switchTab('tiram_sono')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="tiram_sono">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-triangle-exclamation text-accent w-4 text-center"></i><span>Tiram o Sono</span></div>
+                    <span id="badge-tiram_sono" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('tiram_sono')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="tiram_sono">
-                    <i class="fa-solid fa-triangle-exclamation text-accent w-4 text-center"></i><span>Tiram o Sono</span>
+                <button onclick="switchTab('melhorias')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="melhorias">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-lightbulb w-4 text-center"></i><span>Melhorias Operacionais</span></div>
+                    <span id="badge-melhorias" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
-                <button onclick="switchTab('melhorias')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="melhorias">
-                    <i class="fa-solid fa-lightbulb w-4 text-center"></i><span>Melhorias Operacionais</span>
-                </button>
-                <button onclick="switchTab('glossario')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center space-x-2.5" data-tab="glossario">
-                    <i class="fa-solid fa-book w-4 text-center"></i><span>Glossário Técnico</span>
+                <button onclick="switchTab('glossario')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="glossario">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-book w-4 text-center"></i><span>Glossário Técnico</span></div>
                 </button>
             </nav>
 
@@ -118,7 +123,7 @@
                     </div>
                     <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium flex items-center space-x-2">
                         <span><i class="fa-regular fa-calendar text-brand mr-1"></i> Data Base: <span id="currentDateDisplay"></span></span>
-                        <span id="syncStatus" class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-cloud"></i> se Conectado</span>
+                        <span id="syncStatus" class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-cloud"></i> Conectado</span>
                     </div>
                 </div>
 
@@ -161,7 +166,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold text-red-700 uppercase tracking-wider"><i class="fa-solid fa-circle-xmark mr-1"></i> Vencidas / Hoje</span>
+                                <span class="text-xs font-bold text-red-700 uppercase tracking-wider"><i class="fa-solid fa-circle-xmark mr-1"></i> Vencidas</span>
                                 <span id="farolVencidasCount" class="bg-red-200 text-red-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                             </div>
                             <div id="farolVencidasList" class="space-y-2 mt-3 max-h-48 overflow-y-auto text-xs">
@@ -171,11 +176,11 @@
 
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-clock mr-1"></i> Próximos 7 Dias</span>
+                                <span class="text-xs font-bold text-amber-700 uppercase tracking-wider"><i class="fa-solid fa-clock mr-1"></i> Vence Hoje / Próx. 7 Dias</span>
                                 <span id="farol7DiasCount" class="bg-amber-200 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
                             </div>
                             <div id="farol7DiasList" class="space-y-2 mt-3 max-h-48 overflow-y-auto text-xs">
-                                <p class="text-slate-500 italic">Nenhum item nos próximos 7 dias.</p>
+                                <p class="text-slate-500 italic">Nenhum item.</p>
                             </div>
                         </div>
 
@@ -192,40 +197,7 @@
                 </div>
             </section>
 
-            <!-- 2. FLUXO DE OPERAÇÕES (TFA) - IMAGEM EM ALTA DEFINIÇÃO -->
-            <section id="tab-fluxo_tfa" class="tab-content hidden space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4">
-                        <div>
-                            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                                <i class="fa-solid fa-route text-brand"></i>
-                                <span>Fluxograma Operacional (TFA) - Documento Oficial</span>
-                            </h2>
-                            <p class="text-xs text-slate-500 mt-1">Diagrama esquemático oficial sem dados de capacidades ou comprimentos.</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <label class="bg-brand text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-brand-dark transition flex items-center space-x-1.5 shadow">
-                                <i class="fa-solid fa-file-arrow-up"></i>
-                                <span>Carregar Imagem do Fluxograma (PDF/PNG)</span>
-                                <input type="file" id="fluxoImageInput" accept="image/*,.pdf" onchange="loadFluxoImage(event)" class="hidden">
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="fluxoDisplayContainer" class="flex flex-col items-center justify-center bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 p-8 min-h-[500px]">
-                        <div id="fluxoPlaceholder" class="text-center space-y-3">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow mx-auto text-brand text-2xl">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-700 text-sm">Nenhuma imagem carregada do fluxograma</h3>
-                            <p class="text-xs text-slate-500 max-w-md">Clique no botão acima para carregar a imagem em alta definição do fluxograma extraída do documento original.</p>
-                        </div>
-                        <img id="fluxoImagePreview" class="hidden max-w-full h-auto rounded-xl shadow-md border border-slate-200 object-contain max-h-[750px]" alt="Fluxograma Operacional TFA">
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. GESTÃO DE PROJETOS -->
+            <!-- 2. GESTÃO DE PROJETOS -->
             <section id="tab-projetos" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -239,7 +211,7 @@
                 <div class="grid grid-cols-1 gap-6" id="projectsContainer"></div>
             </section>
 
-            <!-- 4. DEMANDAS DO DIA -->
+            <!-- 3. DEMANDAS DO DIA -->
             <section id="tab-demandas_dia" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -268,7 +240,7 @@
                 </div>
             </section>
 
-            <!-- 5. AÇÕES DA SEMANA -->
+            <!-- 4. AÇÕES DA SEMANA -->
             <section id="tab-acoes_semana" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -297,7 +269,7 @@
                 </div>
             </section>
 
-            <!-- 6. AÇÕES CPIA -->
+            <!-- 5. AÇÕES CPIA -->
             <section id="tab-cpia" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -326,7 +298,7 @@
                 </div>
             </section>
 
-            <!-- 7. ANÁLISE DE FALHA -->
+            <!-- 6. ANÁLISE DE FALHA -->
             <section id="tab-analise_falha" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -355,7 +327,7 @@
                 </div>
             </section>
 
-            <!-- 8. DOCUMENTAÇÃO -->
+            <!-- 7. DOCUMENTAÇÃO -->
             <section id="tab-documentacao" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
@@ -384,26 +356,26 @@
                 </div>
             </section>
 
-            <!-- 9. ATIVIDADES QUE TIRAM O SONO -->
+            <!-- 8. ATIVIDADES QUE TIRAM O SONO -->
             <section id="tab-tiram_sono" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Atividades que Tiram o Sono (Turnos & ADM)</h2>
-                        <p class="text-xs text-slate-500">Itens críticos por equipe com plano de ação e progresso dinâmico.</p>
+                        <p class="text-xs text-slate-500">Atividades por Equipe, Plano de Ação e Progresso.</p>
                     </div>
                     <button onclick="openModalSleepless()" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Atividade Crítica</span>
+                        <i class="fa-solid fa-plus"></i><span>Cadastro de Atividade</span>
                     </button>
                 </div>
                 <div class="grid grid-cols-1 gap-6" id="sleeplessContainer"></div>
             </section>
 
-            <!-- 10. MELHORIAS OPERACIONAIS -->
+            <!-- 9. MELHORIAS OPERACIONAIS -->
             <section id="tab-melhorias" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Demandas de Melhoria Operacional</h2>
-                        <p class="text-xs text-slate-500">Iniciativas de melhoria contínua, MoC e referências de manutenção (OM, chamados).</p>
+                        <p class="text-xs text-slate-500">Melhorias de Processo</p>
                     </div>
                     <button onclick="openModalItem('melhorias')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
                         <i class="fa-solid fa-plus"></i><span>Nova Melhoria</span>
@@ -427,13 +399,13 @@
                 </div>
             </section>
 
-            <!-- 11. GLOSSÁRIO TÉCNICO -->
+            <!-- 10. GLOSSÁRIO TÉCNICO -->
             <section id="tab-glossario" class="tab-content hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-900">Glossário Técnico & Engenharia Ferroviária/Industrial</h2>
-                            <p class="text-xs text-slate-500">Definições avançadas de projetos, Capex, Opex, transportadores de correia, recuperadoras, alimentadores e estocagem.</p>
+                            <h2 class="text-xl font-bold text-slate-900">Glossário Técnico</h2>
+                            <p class="text-xs text-slate-500">Definições técnicas.</p>
                         </div>
                         <div class="w-full md:w-72">
                             <input type="text" id="glossarySearch" oninput="filterGlossary()" placeholder="Buscar termo ou conceito..." class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand">
@@ -513,9 +485,7 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Equipes Envolvidas</label>
-                        <div id="projTeamsContainer" class="grid grid-cols-2 gap-1.5 p-2 border border-slate-300 rounded-lg bg-slate-50 max-h-32 overflow-y-auto">
-                            <!-- Preenchido dinamicamente em ordem alfabética -->
-                        </div>
+                        <div id="projTeamsContainer" class="grid grid-cols-2 gap-1.5 p-2 border border-slate-300 rounded-lg bg-slate-50 max-h-32 overflow-y-auto"></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
@@ -589,7 +559,7 @@
                             <option value="Turno B">Turno B</option>
                             <option value="Turno C">Turno C</option>
                             <option value="Turno D">Turno D</option>
-                            <option value="ADM (Controle Operacional)">ADM (Controle Operacional)</option>
+                            <option value="Controle Operacional">ADM (Controle Operacional)</option>
                         </select>
                     </div>
                 </div>
@@ -612,7 +582,7 @@
                     </div>
                 </div>
                 <div class="border-t pt-3">
-                    <label class="block font-semibold text-slate-700 mb-2">Plano de Ação (Ações Mitigadoras)</label>
+                    <label class="block font-semibold text-slate-700 mb-2">Plano de Ação</label>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
                         <input type="text" id="actionDescInput" placeholder="Descrição da ação..." class="p-2 border border-slate-300 rounded-lg md:col-span-2">
                         <input type="date" id="actionPrazoInput" class="p-2 border border-slate-300 rounded-lg">
@@ -630,7 +600,6 @@
 
     <!-- SCRIPT DE LÓGICA E DADOS COM SUPABASE -->
     <script>
-        // CONFIGURAÇÃO DO SUPABASE (Insira suas chaves aqui)
         const SUPABASE_URL = 'https://cvqhwndnjutmmofjuosk.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_aKsMVDlWlJjh_nngCxzvdg_E6SC8Xuz';
         
@@ -651,7 +620,6 @@
             "ASPERSÃO"
         ];
 
-        // Equipes em ordem alfabética obrigatória
         const TEAMS_LIST = [
             "Automação",
             "Correntes",
@@ -663,7 +631,6 @@
         ];
 
         const GLOSSARY_DATA = [
-            // Projetos e Investimentos
             { term: "CAPEX (Capital Expenditure)", category: "Projetos e Investimentos", desc: "Investimentos destinados à aquisição, ampliação ou modernização de ativos permanentes, como equipamentos, instalações e infraestrutura." },
             { term: "OPEX (Operational Expenditure)", category: "Projetos e Investimentos", desc: "Despesas necessárias para manter a operação funcionando, como manutenção, energia, materiais de consumo e contratos de serviços." },
             { term: "TAP (Termo de Abertura de Projeto)", category: "Projetos e Investimentos", desc: "Documento que formaliza o início de um projeto, definindo objetivos, escopo, responsáveis e recursos iniciais." },
@@ -677,8 +644,6 @@
             { term: "Escopo", category: "Projetos e Investimentos", desc: "Conjunto de entregas, atividades e objetivos que fazem parte do projeto." },
             { term: "Marco (Milestone)", category: "Projetos e Investimentos", desc: "Evento importante que representa a conclusão de uma etapa relevante do projeto." },
             { term: "Caminho Crítico", category: "Projetos e Investimentos", desc: "Sequência de atividades que determina a duração mínima do projeto." },
-
-            // Custos e Viabilidade Econômica
             { term: "ROI (Return on Investment)", category: "Custos e Viabilidade Econômica", desc: "Indicador que mede o retorno financeiro obtido em relação ao investimento realizado." },
             { term: "TIR (Taxa Interna de Retorno)", category: "Custos e Viabilidade Econômica", desc: "Taxa de desconto que faz o valor presente líquido de um investimento ser igual a zero." },
             { term: "VPL (Valor Presente Líquido)", category: "Custos e Viabilidade Econômica", desc: "Diferença entre receitas futuras descontadas e o investimento inicial." },
@@ -686,8 +651,6 @@
             { term: "Payback", category: "Custos e Viabilidade Econômica", desc: "Tempo necessário para recuperar o valor investido em um projeto." },
             { term: "Fluxo de Caixa", category: "Custos e Viabilidade Econômica", desc: "Movimentação de entradas e saídas de recursos financeiros ao longo do tempo." },
             { term: "Custo de Ciclo de Vida (LCC)", category: "Custos e Viabilidade Econômica", desc: "Avaliação de todos os custos associados a um ativo durante sua vida útil." },
-
-            // Indicadores e Gestão
             { term: "KPI (Key Performance Indicator)", category: "Indicadores e Gestão", desc: "Indicador-chave utilizado para medir o desempenho de um processo ou objetivo." },
             { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores e Gestão", desc: "Indicador de eficiência global dos equipamentos baseado em disponibilidade, desempenho e qualidade." },
             { term: "MTBF (Mean Time Between Failures)", category: "Indicadores e Gestão", desc: "Tempo médio entre falhas de um equipamento." },
@@ -698,23 +661,15 @@
             { term: "Produtividade", category: "Indicadores e Gestão", desc: "Relação entre a produção obtida e os recursos utilizados." },
             { term: "Throughput", category: "Indicadores e Gestão", desc: "Quantidade de material processado ou transportado em determinado período." },
             { term: "SLA (Service Level Agreement)", category: "Indicadores e Gestão", desc: "Acordo que estabelece níveis mínimos de desempenho de um serviço." },
-
-            // Segurança
             { term: "RAC (Requisitos de Atividades Críticas)", category: "Segurança", desc: "Conjunto de regras corporativas para controlar atividades de alto risco." },
-            { term: "APR (Análise Preliminar de Risco)", category: "Segurança", desc: "Ferramenta utilizada para identificar perigos e definir controles antes da execução de uma atividade." },
-            { term: "PT (Permissão de Trabalho)", category: "Segurança", desc: "Documento formal que autoriza a execução de determinadas atividades." },
             { term: "LOTO (Lockout/Tagout)", category: "Segurança", desc: "Procedimento de bloqueio e etiquetagem para impedir energização acidental." },
             { term: "Bow Tie", category: "Segurança", desc: "Metodologia gráfica que relaciona causas, controles preventivos, evento crítico e consequências." },
             { term: "Incidente", category: "Segurança", desc: "Evento não planejado que poderia ter resultado em perdas." },
             { term: "Acidente", category: "Segurança", desc: "Evento não planejado que gera danos a pessoas, equipamentos ou meio ambiente." },
-            { term: "Quase Acidente (Near Miss)", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
+            { term: "Quase Acidente", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
             { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
             { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
-
-            // Engenharia e Documentação
             { term: "As Built", category: "Engenharia e Documentação", desc: "Documentação atualizada refletindo exatamente como o empreendimento foi executado em campo." },
-            { term: "DF (Disponibilidade Física)", category: "Engenharia e Documentação", desc: "Indicador da porcentagem de tempo que um equipamento esteve apto para operação." },
-            { term: "UF (Utilização Física)", category: "Engenharia e Documentação", desc: "Indicador da porcentagem do tempo disponível em que o equipamento operou." },
             { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
             { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
             { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
@@ -722,23 +677,16 @@
             { term: "Fluxograma", category: "Engenharia e Documentação", desc: "Representação gráfica de um processo." },
             { term: "Revisão de Projeto", category: "Engenharia e Documentação", desc: "Atualização formal de documentos de engenharia." },
             { term: "Comissionamento", category: "Engenharia e Documentação", desc: "Processo de verificação e testes para garantir que sistemas atendam aos requisitos de projeto." },
-
-            // Elementos de Máquinas
             { term: "Mancal", category: "Elementos de Máquinas", desc: "Elemento que apoia e guia eixos rotativos." },
             { term: "Eixo", category: "Elementos de Máquinas", desc: "Componente mecânico responsável por transmitir torque e movimento." },
             { term: "Acoplamento", category: "Elementos de Máquinas", desc: "Dispositivo utilizado para conectar dois eixos." },
             { term: "Redutor", category: "Elementos de Máquinas", desc: "Equipamento destinado a reduzir velocidade e aumentar torque." },
             { term: "Chaveta", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir torque entre eixo e cubo." },
-            { term: "Volante de Inércia", category: "Elementos de Máquinas", desc: "Componente que armazena energia cinética e reduz oscilações de velocidade." },
-            { term: "Braço de Torque", category: "Elementos de Máquinas", desc: "Estrutura utilizada para absorver reações de torque em redutores e equipamentos." },
             { term: "Rolamento", category: "Elementos de Máquinas", desc: "Elemento mecânico que reduz atrito entre partes móveis." },
             { term: "Correia Transportadora", category: "Elementos de Máquinas", desc: "Elemento flexível utilizado para movimentação contínua de materiais." },
             { term: "Tambor", category: "Elementos de Máquinas", desc: "Componente cilíndrico que traciona ou direciona correias transportadoras." },
             { term: "Polia", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmissão de potência por correias." },
             { term: "Engrenagem", category: "Elementos de Máquinas", desc: "Componente mecânico utilizado para transmissão de movimento e torque." },
-            { term: "Corrente de Transmissão", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir potência entre eixos." },
-
-            // Equipamentos de Expedição Ferroviária e Manuseio de Minério
             { term: "TCLD (Transportador de Correia de Longa Distância)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de correias utilizado para transporte de minério em grandes distâncias." },
             { term: "Recuperadora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para retomar material estocado em pilhas." },
             { term: "Empilhadeira de Minério", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado à formação de pilhas de estocagem." },
@@ -748,22 +696,9 @@
             { term: "Carregador de Navios", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado ao carregamento de minério em embarcações." },
             { term: "Chute", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura que direciona o fluxo de material entre equipamentos." },
             { term: "Pátio de Estocagem", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Área destinada à formação e armazenamento de pilhas de minério." },
-            { term: "Pilha Pulmão", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estoque intermediário destinado a garantir continuidade operacional." },
-            { term: "Retomada", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Processo de retirada de material de uma pilha." },
-            { term: "Empilhamento", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Processo de formação de pilhas de minério." },
             { term: "Balança Integradora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para medição contínua da massa transportada por correias." },
             { term: "Detector de Metais", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de proteção utilizado para identificar objetos metálicos indesejados." },
-            { term: "Separador Magnético", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para remoção de partículas metálicas ferromagnéticas." },
-            { term: "Transportador de Correia", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para movimentação contínua de materiais sólidos." },
-            { term: "Estação de Transferência", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Ponto onde ocorre a transferência de material entre transportadores." },
-            { term: "Contaminação de Produto", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Mistura indesejada entre differentes tipos ou qualidades de minério." },
-            { term: "Taxa de Alimentação", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Quantidade de material alimentado por unidade de tempo, normalmente expressa em t/h." },
-            { term: "Tempo de Residência", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Tempo médio que um material permanece armazenado antes de ser retomado." },
-            { term: "Capacidade Nominal", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Capacidade máxima de projeto de um equipamento ou sistema." },
-            { term: "Gargalo", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Recurso ou etapa que limita a capacidade produtiva de um processo." },
-            { term: "TMC (Tempo Médio de Ciclo)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Tempo necessário para completar um ciclo operacional." },
-            { term: "Disponibilidade Operacional", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Percentual de tempo em que o sistema está disponível considerando manutenção e operação." },
-            { term: "Recuperação Operacional", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Percentual de material efetivamente recuperado em relação ao planejado." }
+            { term: "Separador Magnético", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para remoção de partículas metálicas ferromagnéticas." }
         ];
 
         let appData = {
@@ -774,8 +709,7 @@
             analise_falha: [],
             documentacao: [],
             tiram_sono: [],
-            melhorias: [],
-            fluxoImageData: null
+            melhorias: []
         };
 
         let currentAttachments = [];
@@ -789,7 +723,6 @@
             populateSelects();
             setDateDisplay();
             renderGlossary();
-            renderSavedFluxoImage();
             refreshAllViews();
         });
 
@@ -830,7 +763,6 @@
                 }
             });
 
-            // Preenche as equipes do projeto em ordem alfabética
             const teamsContainer = document.getElementById('projTeamsContainer');
             if (teamsContainer) {
                 teamsContainer.innerHTML = TEAMS_LIST.map(team => `
@@ -874,33 +806,6 @@
             }
         }
 
-        function loadFluxoImage(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                appData.fluxoImageData = e.target.result;
-                renderSavedFluxoImage();
-                saveToSupabase();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function renderSavedFluxoImage() {
-            const placeholder = document.getElementById('fluxoPlaceholder');
-            const preview = document.getElementById('fluxoImagePreview');
-            if (!placeholder || !preview) return;
-
-            if (appData.fluxoImageData) {
-                placeholder.classList.add('hidden');
-                preview.src = appData.fluxoImageData;
-                preview.classList.remove('hidden');
-            } else {
-                placeholder.classList.remove('hidden');
-                preview.classList.add('hidden');
-            }
-        }
-
         function handleFileAttachment(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
@@ -935,7 +840,6 @@
             renderAttachmentPreviews();
         }
 
-        // Função de cálculo automático de status baseado na data limite (prazo)
         function calculateAutomaticStatus(prazoStr, currentStatus) {
             if (currentStatus === 'Concluído') return 'Concluído';
             if (!prazoStr) return 'Em Andamento';
@@ -979,7 +883,6 @@
                 });
             });
 
-            // Atualiza status de demandas diárias também
             appData.demandas_dia.forEach(item => {
                 item.status = calculateAutomaticStatus(item.prazo, item.status);
             });
@@ -1013,6 +916,7 @@
         function refreshAllViews() {
             syncOverdueToDailyDemands();
             saveToSupabase();
+            renderBadges();
             renderDashboard();
             renderProjects();
             renderGenericTable('demandas_dia');
@@ -1022,6 +926,32 @@
             renderGenericTable('documentacao');
             renderSleepless();
             renderMelhorias();
+        }
+
+        function renderBadges() {
+            const countOpen = (arr) => arr.filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
+            
+            // Projetos abertos
+            const projOpen = appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length;
+            document.getElementById('badge-projetos').innerText = projOpen;
+
+            document.getElementById('badge-demandas_dia').innerText = countOpen(appData.demandas_dia);
+            document.getElementById('badge-acoes_semana').innerText = countOpen(appData.acoes_semana);
+            document.getElementById('badge-cpia').innerText = countOpen(appData.cpia);
+            document.getElementById('badge-analise_falha').innerText = countOpen(appData.analise_falha);
+            document.getElementById('badge-documentacao').innerText = countOpen(appData.documentacao);
+            document.getElementById('badge-melhorias').innerText = countOpen(appData.melhorias);
+
+            // Tiram o sono (conta ações abertas ou itens críticos abertos)
+            let sleepOpen = 0;
+            appData.tiram_sono.forEach(s => {
+                if (s.acoes && s.acoes.length > 0) {
+                    sleepOpen += s.acoes.filter(a => a.status !== 'Concluído').length;
+                } else if (calculateAutomaticStatus(s.prazo, s.status) !== 'Concluído') {
+                    sleepOpen++;
+                }
+            });
+            document.getElementById('badge-tiram_sono').innerText = sleepOpen;
         }
 
         function renderDashboard() {
@@ -1046,9 +976,12 @@
                         target.setHours(0,0,0,0);
                         const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 
-                        if (diffDays <= 0) {
+                        if (diffDays < 0) {
                             delayed++;
                             farolVencidas.push({ desc: item.descricao, prazo: formatDateBR(target) });
+                        } else if (diffDays === 0) {
+                            noTime++;
+                            farol7.push({ desc: item.descricao, prazo: 'Vence Hoje' });
                         } else if (diffDays <= 7) {
                             noTime++;
                             farol7.push({ desc: item.descricao, prazo: formatDateBR(target) });
@@ -1072,9 +1005,12 @@
                         const target = parseDateISO(ac.prazo);
                         target.setHours(0,0,0,0);
                         const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-                        if (diffDays <= 0) {
+                        if (diffDays < 0) {
                             delayed++;
                             farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
+                        } else if (diffDays === 0) {
+                            noTime++;
+                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: 'Vence Hoje' });
                         } else if (diffDays <= 7) {
                             noTime++;
                             farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
@@ -1097,7 +1033,7 @@
             document.getElementById('farolVencidasList').innerHTML = farolVencidas.length ? farolVencidas.map(i => `<div class="p-2 bg-white rounded border border-red-200"><p class="font-semibold text-red-900 truncate">${i.desc}</p><span class="text-red-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item vencido.</p>';
 
             document.getElementById('farol7DiasCount').innerText = farol7.length;
-            document.getElementById('farol7DiasList').innerHTML = farol7.length ? farol7.map(i => `<div class="p-2 bg-white rounded border border-amber-200"><p class="font-semibold text-amber-900 truncate">${i.desc}</p><span class="text-amber-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item nos próximos 7 dias.</p>';
+            document.getElementById('farol7DiasList').innerHTML = farol7.length ? farol7.map(i => `<div class="p-2 bg-white rounded border border-amber-200"><p class="font-semibold text-amber-900 truncate">${i.desc}</p><span class="text-amber-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item.</p>';
 
             document.getElementById('farol30DiasCount').innerText = farol30.length;
             document.getElementById('farol30DiasList').innerHTML = farol30.length ? farol30.map(i => `<div class="p-2 bg-white rounded border border-blue-200"><p class="font-semibold text-blue-900 truncate">${i.desc}</p><span class="text-blue-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>';
@@ -1113,9 +1049,7 @@
             }
 
             container.innerHTML = appData.projects.map((proj, idx) => {
-                // Atualiza status do projeto com base no prazo geral e calcula curva S pelas ações
                 proj.status = calculateAutomaticStatus(proj.schedule, proj.status);
-                
                 let calculatedProgress = proj.progress || 0;
                 if (proj.actions && proj.actions.length > 0) {
                     const completedActions = proj.actions.filter(a => a.status === 'Concluído').length;
@@ -1161,8 +1095,8 @@
                                     ${proj.actions.map((act, actIdx) => `
                                         <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
                                             <div class="flex items-center space-x-2">
-                                                <input type="checkbox" ${act.status === 'Concluído' ? 'checked' : ''} onchange="toggleProjectActionDone(${idx}, ${actIdx})" class="w-4 h-4 text-brand rounded">
-                                                <span class="${act.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${act.desc}</span>
+                                                <input type="checkbox" ${act.status==='Concluído'?'checked':''} onchange="toggleProjectActionDone(${idx}, ${actIdx})" class="w-4 h-4 text-brand rounded">
+                                                <span class="${act.status==='Concluído'?'line-through text-slate-400 font-medium':'text-slate-800 font-medium'}">${act.desc}</span>
                                             </div>
                                             <div class="text-[11px] text-slate-500 space-x-2">
                                                 <span>Resp: <strong>${act.resp || '-'}</strong></span>
@@ -1200,7 +1134,6 @@
             renderProjectDocsList();
             renderProjectActionsList();
 
-            // Limpa checkboxes de equipes
             document.querySelectorAll('input[name="projTeamCheckbox"]').forEach(cb => cb.checked = false);
 
             if (idx !== null) {
@@ -1265,8 +1198,8 @@
             list.innerHTML = currentProjectActions.map((act, i) => `
                 <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
                     <div class="flex items-center space-x-2">
-                        <input type="checkbox" ${act.status === 'Concluído' ? 'checked' : ''} onchange="toggleModalProjectAction(${i})" class="w-4 h-4 text-brand rounded">
-                        <span class="${act.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${act.desc} (${act.resp || 'Sem resp'} - ${act.prazo ? act.prazo.split('-').reverse().join('/') : ''})</span>
+                        <input type="checkbox" ${act.status==='Concluído'?'checked':''} onchange="toggleModalProjectAction(${i})" class="w-4 h-4 text-brand rounded">
+                        <span class="${act.status==='Concluído'?'line-through text-slate-400 font-medium':'text-slate-800 font-medium'}">${act.desc} (${act.resp || 'Sem resp'} - ${act.prazo ? act.prazo.split('-').reverse().join('/') : ''})</span>
                     </div>
                     <button type="button" onclick="currentProjectActions.splice(${i},1);renderProjectActionsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
                 </div>
@@ -1321,7 +1254,6 @@
             e.preventDefault();
             const idx = document.getElementById('projId').value;
             
-            // Coleta equipes selecionadas ordenadas alfabeticamente
             const selectedTeams = [];
             document.querySelectorAll('input[name="projTeamCheckbox"]:checked').forEach(cb => {
                 selectedTeams.push(cb.value);
@@ -1725,8 +1657,8 @@
                                     ${item.acoes.map((ac, acIdx) => `
                                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-2.5 rounded border border-slate-200 gap-2 text-xs">
                                             <div class="flex items-center space-x-2 flex-1">
-                                                <input type="checkbox" ${ac.status === 'Concluído' ? 'checked' : ''} onchange="toggleSleepActionDone(${idx}, ${acIdx})" class="w-4 h-4 text-brand rounded">
-                                                <span class="${ac.status === 'Concluído' ? 'line-through text-slate-400 font-medium' : 'text-slate-800 font-medium'}">${ac.desc}</span>
+                                                <input type="checkbox" ${ac.status==='Concluído'?'checked':''} onchange="toggleSleepActionDone(${idx}, ${acIdx})" class="w-4 h-4 text-brand rounded">
+                                                <span class="${ac.status==='Concluído'?'line-through text-slate-400 font-medium':'text-slate-800 font-medium'}">${ac.desc}</span>
                                             </div>
                                             <div class="flex items-center space-x-3">
                                                 <span class="text-slate-500">Prazo: ${ac.prazo ? ac.prazo.split('-').reverse().join('/') : ''}</span>
@@ -1918,7 +1850,6 @@
                 fileReader.onload = function(e) {
                     try {
                         appData = JSON.parse(e.target.result);
-                        renderSavedFluxoImage();
                         refreshAllViews();
                         alert('Backup restaurado com sucesso!');
                     } catch (err) {
@@ -1928,16 +1859,14 @@
             }
         }
 
-        // --- INTEGRAÇÃO COM SUPABASE ---
         async function saveToSupabase() {
-            // Salva também localmente como contingência
             localStorage.setItem('rail_engineering_app_data', JSON.stringify(appData));
 
             if (!supabaseClient) {
                 const statusEl = document.getElementById('syncStatus');
                 if (statusEl) {
                     statusEl.className = 'text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold';
-                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Usando LocalStorage (Supabase não configurado)';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> LocalStorage';
                 }
                 return;
             }
@@ -1952,14 +1881,14 @@
                 const statusEl = document.getElementById('syncStatus');
                 if (statusEl) {
                     statusEl.className = 'text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold';
-                    statusEl.innerHTML = '<i class="fa-solid fa-cloud"></i> Sincronizado com Supabase';
+                    statusEl.innerHTML = '<i class="fa-solid fa-cloud"></i> Conectado';
                 }
             } catch (err) {
                 console.error('Erro ao salvar no Supabase:', err);
                 const statusEl = document.getElementById('syncStatus');
                 if (statusEl) {
                     statusEl.className = 'text-[10px] bg-red-100 text-red-800 px-2 py-0.5 rounded font-bold';
-                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Erro de Sincronização Supabase';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Erro de Sincronização';
                 }
             }
         }
@@ -1977,7 +1906,7 @@
                     .eq('id', 1)
                     .single();
 
-                if (error && error.code !== 'PGRST116') throw error; // PGRST116 = row not found
+                if (error && error.code !== 'PGRST116') throw error;
 
                 if (data && data.data) {
                     appData = data.data;
@@ -1985,7 +1914,7 @@
                     loadFromLocalStorage();
                 }
             } catch (err) {
-                console.error('Erro ao carregar do Supabase, buscando localmente:', err);
+                console.error('Erro ao carregar do Supabase:', err);
                 loadFromLocalStorage();
             }
         }
