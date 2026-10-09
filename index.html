@@ -90,7 +90,7 @@
                 </button>
             </nav>
 
-            <!-- Rodapé da Sidebar (Ações globais) -->
+            <!-- Rodapé da Sidebar -->
             <div class="p-3 bg-brand-dark/80 border-t border-white/10 space-y-2">
                 <button onclick="toggleLayoutMode()" id="layoutToggleBtn" class="w-full bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-center space-x-2 border border-white/20 transition">
                     <i class="fa-solid fa-desktop" id="layoutIcon"></i>
@@ -214,20 +214,31 @@
 
             <!-- 3. DEMANDAS DO DIA -->
             <section id="tab-demandas_dia" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Demandas para Executar no Dia</h2>
                         <p class="text-xs text-slate-500">Inclui automaticamente tarefas vencidas ou com vencimento no dia corrente.</p>
                     </div>
-                    <button onclick="openModalItem('demandas_dia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Demanda Diária</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-demandas_dia" onchange="renderGenericTable('demandas_dia')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('demandas_dia')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('demandas_dia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Demanda</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('demandas_dia', this)" class="rounded"></th>
                                     <th class="p-3">Status / Prazo</th>
                                     <th class="p-3">Descrição</th>
                                     <th class="p-3">Categoria</th>
@@ -243,20 +254,31 @@
 
             <!-- 4. AÇÕES DA SEMANA -->
             <section id="tab-acoes_semana" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Ações para a Semana Corrente</h2>
                         <p class="text-xs text-slate-500">Planejamento tático de médio prazo da semana operacional.</p>
                     </div>
-                    <button onclick="openModalItem('acoes_semana')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Ação Semanal</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-acoes_semana" onchange="renderGenericTable('acoes_semana')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('acoes_semana')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('acoes_semana')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Ação</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('acoes_semana', this)" class="rounded"></th>
                                     <th class="p-3">Status / Prazo</th>
                                     <th class="p-3">Descrição</th>
                                     <th class="p-3">Categoria</th>
@@ -272,20 +294,31 @@
 
             <!-- 5. AÇÕES CPIA -->
             <section id="tab-cpia" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Gestão de Ações CPIA</h2>
                         <p class="text-xs text-slate-500">Acompanhamento de planos de ação e pendências CPIA.</p>
                     </div>
-                    <button onclick="openModalItem('cpia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Ação CPIA</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-cpia" onchange="renderGenericTable('cpia')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('cpia')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('cpia')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Ação</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('cpia', this)" class="rounded"></th>
                                     <th class="p-3">ID Ação</th>
                                     <th class="p-3">Status / Prazo</th>
                                     <th class="p-3">Descrição</th>
@@ -301,20 +334,31 @@
 
             <!-- 6. ANÁLISE DE FALHA -->
             <section id="tab-analise_falha" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Ações de Análise de Falha (AF)</h2>
                         <p class="text-xs text-slate-500">Tratativas e contramedidas baseadas em investigações de falhas.</p>
                     </div>
-                    <button onclick="openModalItem('analise_falha')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Ação de AF</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-analise_falha" onchange="renderGenericTable('analise_falha')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('analise_falha')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('analise_falha')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Ação</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('analise_falha', this)" class="rounded"></th>
                                     <th class="p-3">Ref. AF</th>
                                     <th class="p-3">Status / Prazo</th>
                                     <th class="p-3">Descrição da Ação</th>
@@ -330,20 +374,31 @@
 
             <!-- 7. DOCUMENTAÇÃO -->
             <section id="tab-documentacao" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Demandas de Criação e Revisão de Documentação</h2>
                         <p class="text-xs text-slate-500">Controle de procedimentos, manuais, fluxogramas e normas técnicas.</p>
                     </div>
-                    <button onclick="openModalItem('documentacao')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Demanda Doc</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-documentacao" onchange="renderGenericTable('documentacao')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('documentacao')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('documentacao')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Demanda</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('documentacao', this)" class="rounded"></th>
                                     <th class="p-3">Ação / Tipo</th>
                                     <th class="p-3">Status / Prazo</th>
                                     <th class="p-3">Descrição / Origem</th>
@@ -373,20 +428,31 @@
 
             <!-- 9. MELHORIAS OPERACIONAIS -->
             <section id="tab-melhorias" class="tab-content hidden space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Demandas de Melhoria Operacional</h2>
                         <p class="text-xs text-slate-500">Melhorias de Processo</p>
                     </div>
-                    <button onclick="openModalItem('melhorias')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
-                        <i class="fa-solid fa-plus"></i><span>Nova Melhoria</span>
-                    </button>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <select id="filter-melhorias" onchange="renderGenericTable('melhorias')" class="text-xs p-2 border border-slate-300 rounded-lg bg-white">
+                            <option value="todos">Filtrar Status: Todos</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Atrasado">Atrasado</option>
+                            <option value="Vence Hoje">Vence Hoje</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                        <button onclick="deleteSelectedItems('melhorias')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-xs font-semibold border border-red-200 flex items-center space-x-1 transition"><i class="fa-solid fa-trash-can"></i><span>Excluir Selecionados</span></button>
+                        <button onclick="openModalItem('melhorias')" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                            <i class="fa-solid fa-plus"></i><span>Nova Melhoria</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead class="bg-slate-100 text-slate-600 uppercase font-semibold">
                                 <tr>
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAll('melhorias', this)" class="rounded"></th>
                                     <th class="p-3">Status / Prazo / Dias Corridos</th>
                                     <th class="p-3">Sistema / Descrição</th>
                                     <th class="p-3">Solicitante / MoC / Ref</th>
@@ -507,8 +573,6 @@
                         </select>
                     </div>
                 </div>
-                
-                <!-- PLANO DE AÇÃO DO PROJETO (FASES) -->
                 <div class="border-t pt-3">
                     <div class="flex justify-between items-center mb-2">
                         <label class="block font-bold text-slate-800">Plano de Ação do Projeto (Fases e Ações)</label>
@@ -522,7 +586,6 @@
                     </div>
                     <div id="projActionsList" class="space-y-2 max-h-40 overflow-y-auto"></div>
                 </div>
-
                 <div class="border-t pt-3">
                     <label class="block font-semibold text-slate-700 mb-2">Documentação Vinculada ao Projeto</label>
                     <div class="flex gap-2 mb-2">
@@ -610,25 +673,11 @@
         }
 
         const PRODUCTION_SYSTEMS = [
-            "TLCD PICO",
-            "TCLD VGR 1",
-            "TCLD VGR 2",
-            "PÁTIO TFA",
-            "TFA 1",
-            "TFA 2",
-            "TFA 3",
-            "DRENAGEM FORÇADA",
-            "ASPERSÃO"
+            "TLCD PICO", "TCLD VGR 1", "TCLD VGR 2", "PÁTIO TFA", "TFA 1", "TFA 2", "TFA 3", "DRENAGEM FORÇADA", "ASPERSÃO"
         ];
 
         const TEAMS_LIST = [
-            "Automação",
-            "Correntes",
-            "Elétrica",
-            "Engenharia",
-            "Mecânica",
-            "Operação",
-            "PCM"
+            "Automação", "Correntes", "Elétrica", "Engenharia", "Mecânica", "Operação", "PCM"
         ];
 
         const GLOSSARY_DATA = [
@@ -670,7 +719,7 @@
             { term: "Quase Acidente", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
             { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
             { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
-            { term: "As Built", category: "Engenharia e Documentação", desc: "Documento atualizada refletindo exatamente como o empreendimento foi executado em campo." },
+            { term: "As Built", category: "Engenharia e Documentação", desc: "Documentação atualizada refletindo exatamente como o empreendimento foi executado em campo." },
             { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
             { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
             { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
@@ -852,35 +901,38 @@
 
             if (target < today) {
                 return 'Atrasado';
+            } else if (target.getTime() === today.getTime()) {
+                return 'Vence Hoje';
             }
             return 'Em Andamento';
         }
 
-        function syncOverdueToDailyDemands() {
+        function getVirtualDailyDemands() {
             const today = new Date();
             today.setHours(0,0,0,0);
 
+            let virtualList = [...appData.demandas_dia];
             const modulesToCheck = ['acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
+
             modulesToCheck.forEach(mod => {
                 appData[mod].forEach(item => {
-                    item.status = calculateAutomaticStatus(item.prazo, item.status);
-                    if (item.status !== 'Concluído' && item.prazo) {
+                    const st = calculateAutomaticStatus(item.prazo, item.status);
+                    if (st !== 'Concluído' && item.prazo) {
                         const itemDate = parseDateISO(item.prazo);
                         itemDate.setHours(0,0,0,0);
                         if (itemDate <= today) {
-                            const cleanDesc = item.descricao.replace(/^[Sincronizado]\s*/, '');
-                            const exists = appData.demandas_dia.some(d => {
-                                const dClean = d.descricao.replace(/^[Sincronizado]\s*/, '');
+                            const cleanDesc = item.descricao.replace(/^\[Sincronizado\]\s*/, '');
+                            const exists = virtualList.some(d => {
+                                const dClean = d.descricao.replace(/^\[Sincronizado\]\s*/, '');
                                 return dClean === cleanDesc;
                             });
                             if (!exists) {
-                                appData.demandas_dia.push({
-                                    id: 'SYNC-' + (item.id || Date.now() + '-' + Math.floor(Math.random()*1000)),
+                                virtualList.push({
+                                    ...item,
+                                    id: 'VIRTUAL-' + (item.id || Math.random()),
                                     descricao: `[Sincronizado] ${cleanDesc}`,
-                                    prazo: item.prazo,
-                                    status: 'Em Andamento',
-                                    categoria: 'Urgente / Sincronizado',
-                                    anexos: item.anexos || []
+                                    _isVirtual: true,
+                                    _originalMod: mod
                                 });
                             }
                         }
@@ -888,9 +940,7 @@
                 });
             });
 
-            appData.demandas_dia.forEach(item => {
-                item.status = calculateAutomaticStatus(item.prazo, item.status);
-            });
+            return virtualList;
         }
 
         function getStatusBadge(prazoStr, status) {
@@ -919,7 +969,6 @@
         }
 
         function refreshAllViews() {
-            syncOverdueToDailyDemands();
             saveToSupabase();
             renderBadges();
             renderDashboard();
@@ -939,7 +988,7 @@
             const projOpen = appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length;
             document.getElementById('badge-projetos').innerText = projOpen;
 
-            document.getElementById('badge-demandas_dia').innerText = countOpen(appData.demandas_dia);
+            document.getElementById('badge-demandas_dia').innerText = getVirtualDailyDemands().filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
             document.getElementById('badge-acoes_semana').innerText = countOpen(appData.acoes_semana);
             document.getElementById('badge-cpia').innerText = countOpen(appData.cpia);
             document.getElementById('badge-analise_falha').innerText = countOpen(appData.analise_falha);
@@ -969,7 +1018,8 @@
             const allModules = ['demandas_dia', 'acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
             
             allModules.forEach(mod => {
-                appData[mod].forEach(item => {
+                const list = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
+                list.forEach(item => {
                     total++;
                     const st = calculateAutomaticStatus(item.prazo, item.status);
                     if (st === 'Concluído') {
@@ -1309,26 +1359,25 @@
             }[mod]);
 
             if (!tbody) return;
-            const items = appData[mod];
+            
+            let items = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
+            
+            // Filtro de status
+            const filterEl = document.getElementById(`filter-${mod}`);
+            const filterVal = filterEl ? filterEl.value : 'todos';
+
+            if (filterVal !== 'todos') {
+                items = items.filter(item => calculateAutomaticStatus(item.prazo, item.status) === filterVal);
+            }
 
             if (items.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 italic">Nenhum registro encontrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500 italic">Nenhum registro encontrado.</td></tr>`;
                 return;
             }
 
-            const today = new Date();
-            today.setHours(0,0,0,0);
-
             tbody.innerHTML = items.map((item, idx) => {
                 item.status = calculateAutomaticStatus(item.prazo, item.status);
-
-                if (mod !== 'demandas_dia' && item.prazo) {
-                    const target = parseDateISO(item.prazo);
-                    target.setHours(0,0,0,0);
-                    if (target <= today && item.status !== 'Concluído') {
-                        return '';
-                    }
-                }
+                const realIdx = mod === 'demandas_dia' && item._isVirtual ? item._originalMod + '::' + item.descricao : idx;
 
                 if (mod === 'melhorias') {
                     let diasCorridos = '-';
@@ -1343,6 +1392,7 @@
 
                     return `
                         <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
                             <td class="p-3">
                                 ${getStatusBadge(item.prazo, item.status)}
                                 <div class="text-[11px] text-slate-500 mt-1"><i class="fa-regular fa-clock mr-1"></i> ${diasCorridos}</div>
@@ -1358,7 +1408,7 @@
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
                                 <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100" title="Marcar Concluído"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                ${!item._isVirtual ? `<button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200" title="Editar"><i class="fa-solid fa-pen"></i></button>` : ''}
                                 <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Excluir"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
@@ -1368,13 +1418,14 @@
                 if (mod === 'cpia') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
                             <td class="p-3 font-bold text-slate-800">${item.idCpia || '-'}</td>
                             <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
                             <td class="p-3 text-slate-800">${item.descricao}</td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
                                 <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                ${!item._isVirtual ? `<button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>` : ''}
                                 <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
@@ -1384,13 +1435,14 @@
                 if (mod === 'analise_falha') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
                             <td class="p-3 font-bold text-slate-800">AF-${item.refAf || '-'}</td>
                             <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
                             <td class="p-3 text-slate-800">${item.descricao}</td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
                                 <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                ${!item._isVirtual ? `<button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>` : ''}
                                 <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
@@ -1400,6 +1452,7 @@
                 if (mod === 'documentacao') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
                             <td class="p-3">
                                 <span class="font-bold text-brand block">${item.tipoAcao || 'Criação'}</span>
                                 <span class="text-slate-500">${item.tipoDoc || ''}</span>
@@ -1412,7 +1465,7 @@
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
                                 <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                ${!item._isVirtual ? `<button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>` : ''}
                                 <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
@@ -1421,23 +1474,56 @@
 
                 return `
                     <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
                         <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
                         <td class="p-3 text-slate-800">${item.descricao}</td>
                         <td class="p-3"><span class="bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">${item.categoria || 'Geral'}</span></td>
                         <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                         <td class="p-3 text-center space-x-2">
                             <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                            <button onclick="openModalItem('${mod}', ${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                            ${!item._isVirtual ? `<button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>` : ''}
                             <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             }).join('');
+        }
 
-            // Remove linhas vazias geradas por itens migrados
-            tbody.innerHTML = tbody.innerHTML.replace(/<tr class="hover:bg-slate-50 transition"><\/tr>/g, '');
-            if (!tbody.innerHTML.trim()) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 italic">Nenhum registro encontrado (itens migrados para as Demandas do Dia).</td></tr>`;
+        function toggleSelectAll(mod, masterCheckbox) {
+            const checkboxes = document.querySelectorAll(`.row-select-${mod}`);
+            checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
+        }
+
+        function deleteSelectedItems(mod) {
+            const checkboxes = document.querySelectorAll(`.row-select-${mod}:checked`);
+            if (checkboxes.length === 0) {
+                alert('Nenhum item selecionado para exclusão.');
+                return;
+            }
+
+            if (confirm(`Deseja realmente excluir os ${checkboxes.length} itens selecionados?`)) {
+                const indices = Array.from(checkboxes).map(cb => parseInt(cb.value)).sort((a,b) => b - a);
+                
+                if (mod === 'demandas_dia') {
+                    const virtualList = getVirtualDailyDemands();
+                    indices.forEach(idx => {
+                        const item = virtualList[idx];
+                        if (item._isVirtual) {
+                            // Se for virtual, podemos marcar como concluído ou alterar o prazo original para sumir do dia
+                            const origList = appData[item._originalMod];
+                            const origItem = origList.find(o => o.descricao === item.descricao.replace(/^[Sincronizado]\s*/, ''));
+                            if (origItem) origItem.status = 'Concluído';
+                        } else {
+                            appData.demandas_dia.splice(idx, 1);
+                        }
+                    });
+                } else {
+                    indices.forEach(idx => {
+                        appData[mod].splice(idx, 1);
+                    });
+                }
+
+                refreshAllViews();
             }
         }
 
@@ -1447,14 +1533,39 @@
         }
 
         function toggleItemDone(mod, idx) {
-            const currentSt = appData[mod][idx].status;
-            appData[mod][idx].status = currentSt === 'Concluído' ? calculateAutomaticStatus(appData[mod][idx].prazo, 'Em Andamento') : 'Concluído';
+            if (mod === 'demandas_dia') {
+                const virtualList = getVirtualDailyDemands();
+                const item = virtualList[idx];
+                if (item._isVirtual) {
+                    const origItem = appData[item._originalMod].find(o => o.descricao === item.descricao.replace(/^[Sincronizado]\s*/, ''));
+                    if (origItem) {
+                        origItem.status = origItem.status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+                    }
+                } else {
+                    const currentSt = appData.demandas_dia[idx].status;
+                    appData.demandas_dia[idx].status = currentSt === 'Concluído' ? 'Em Andamento' : 'Concluído';
+                }
+            } else {
+                const currentSt = appData[mod][idx].status;
+                appData[mod][idx].status = currentSt === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            }
             refreshAllViews();
         }
 
         function deleteItem(mod, idx) {
             if (confirm('Deseja excluir este item?')) {
-                appData[mod].splice(idx, 1);
+                if (mod === 'demandas_dia') {
+                    const virtualList = getVirtualDailyDemands();
+                    const item = virtualList[idx];
+                    if (item._isVirtual) {
+                        const origItem = appData[item._originalMod].find(o => o.descricao === item.descricao.replace(/^[Sincronizado]\s*/, ''));
+                        if (origItem) origItem.status = 'Concluído';
+                    } else {
+                        appData.demandas_dia.splice(idx, 1);
+                    }
+                } else {
+                    appData[mod].splice(idx, 1);
+                }
                 refreshAllViews();
             }
         }
