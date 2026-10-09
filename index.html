@@ -121,8 +121,9 @@
                         </h2>
                         <p class="text-xs text-slate-500">Visão consolidada de todas as frentes, prazos e status operacionais.</p>
                     </div>
-                    <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium flex items-center space-x-2">
+                    <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-medium flex items-center space-x-3">
                         <span><i class="fa-regular fa-calendar text-brand mr-1"></i> Data Base: <span id="currentDateDisplay"></span></span>
+                        <span><i class="fa-regular fa-clock text-brand mr-1"></i> Sincronização: <span id="syncTimeDisplay">--:--:--</span></span>
                         <span id="syncStatus" class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-cloud"></i> Conectado</span>
                     </div>
                 </div>
@@ -669,7 +670,7 @@
             { term: "Quase Acidente", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
             { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
             { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
-            { term: "As Built", category: "Engenharia e Documentação", desc: "Documentação atualizada refletindo exatamente como o empreendimento foi executado em campo." },
+            { term: "As Built", category: "Engenharia e Documentação", desc: "Documento atualizada refletindo exatamente como o empreendimento foi executado em campo." },
             { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
             { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
             { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
@@ -867,11 +868,15 @@
                         const itemDate = parseDateISO(item.prazo);
                         itemDate.setHours(0,0,0,0);
                         if (itemDate <= today) {
-                            const exists = appData.demandas_dia.some(d => d.descricao === item.descricao);
+                            const cleanDesc = item.descricao.replace(/^[Sincronizado]\s*/, '');
+                            const exists = appData.demandas_dia.some(d => {
+                                const dClean = d.descricao.replace(/^[Sincronizado]\s*/, '');
+                                return dClean === cleanDesc;
+                            });
                             if (!exists) {
                                 appData.demandas_dia.push({
-                                    id: 'SYNC-' + Date.now() + '-' + Math.floor(Math.random()*1000),
-                                    descricao: `[Sincronizado] ${item.descricao}`,
+                                    id: 'SYNC-' + (item.id || Date.now() + '-' + Math.floor(Math.random()*1000)),
+                                    descricao: `[Sincronizado] ${cleanDesc}`,
                                     prazo: item.prazo,
                                     status: 'Em Andamento',
                                     categoria: 'Urgente / Sincronizado',
@@ -931,7 +936,6 @@
         function renderBadges() {
             const countOpen = (arr) => arr.filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
             
-            // Projetos abertos
             const projOpen = appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length;
             document.getElementById('badge-projetos').innerText = projOpen;
 
@@ -942,7 +946,6 @@
             document.getElementById('badge-documentacao').innerText = countOpen(appData.documentacao);
             document.getElementById('badge-melhorias').innerText = countOpen(appData.melhorias);
 
-            // Tiram o sono (conta ações abertas ou itens críticos abertos)
             let sleepOpen = 0;
             appData.tiram_sono.forEach(s => {
                 if (s.acoes && s.acoes.length > 0) {
@@ -1313,8 +1316,19 @@
                 return;
             }
 
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
             tbody.innerHTML = items.map((item, idx) => {
                 item.status = calculateAutomaticStatus(item.prazo, item.status);
+
+                if (mod !== 'demandas_dia' && item.prazo) {
+                    const target = parseDateISO(item.prazo);
+                    target.setHours(0,0,0,0);
+                    if (target <= today && item.status !== 'Concluído') {
+                        return '';
+                    }
+                }
 
                 if (mod === 'melhorias') {
                     let diasCorridos = '-';
@@ -1419,6 +1433,12 @@
                     </tr>
                 `;
             }).join('');
+
+            // Remove linhas vazias geradas por itens migrados
+            tbody.innerHTML = tbody.innerHTML.replace(/<tr class="hover:bg-slate-50 transition"><\/tr>/g, '');
+            if (!tbody.innerHTML.trim()) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500 italic">Nenhum registro encontrado (itens migrados para as Demandas do Dia).</td></tr>`;
+            }
         }
 
         function renderAttachmentsCell(anexos) {
@@ -1861,6 +1881,9 @@
 
         async function saveToSupabase() {
             localStorage.setItem('rail_engineering_app_data', JSON.stringify(appData));
+            const nowTimeStr = new Date().toLocaleTimeString('pt-BR');
+            const timeEl = document.getElementById('syncTimeDisplay');
+            if (timeEl) timeEl.innerText = nowTimeStr;
 
             if (!supabaseClient) {
                 const statusEl = document.getElementById('syncStatus');
@@ -1932,3 +1955,4 @@
     </script>
 </body>
 </html>
+
