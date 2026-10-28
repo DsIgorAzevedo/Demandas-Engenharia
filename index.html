@@ -533,7 +533,7 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                         <div>
                             <h2 class="text-xl font-bold text-slate-900">Glossário Técnico</h2>
-                            <p class="text-xs text-slate-500">Definições técnicas.</p>
+                            <p class="text-xs text-slate-500">Definições técnicas (em ordem alfabética).</p>
                         </div>
                         <div class="w-full md:w-72">
                             <input type="text" id="glossarySearch" oninput="filterGlossary()" placeholder="Buscar termo ou conceito..." class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand">
@@ -785,75 +785,93 @@
             "Geral"
         ];
 
+        // GLOSSÁRIO TÉCNICO COMPLETO EM ORDEM ALFABÉTICA (INCLUINDO OS NOVOS TERMOS SOLICITADOS)
         const GLOSSARY_DATA = [
-            { term: "CAPEX (Capital Expenditure)", category: "Projetos e Investimentos", desc: "Investimentos destinados à aquisição, ampliação ou modernização de ativos permanentes, como equipamentos, instalações e infraestrutura." },
-            { term: "OPEX (Operational Expenditure)", category: "Projetos e Investimentos", desc: "Despesas necessárias para manter a operação funcionando, como manutenção, energia, materiais de consumo e contratos de serviços." },
-            { term: "TAP (Termo de Abertura de Projeto)", category: "Projetos e Investimentos", desc: "Documento que formaliza o início de um projeto, definindo objetivos, escopo, responsáveis e recursos iniciais." },
-            { term: "FEL (Front-End Loading)", category: "Projetos e Investimentos", desc: "Metodologia de desenvolvimento de projetos que busca reduzir riscos através do detalhamento progressivo antes da aprovação dos investimentos." },
-            { term: "Gate", category: "Projetos e Investimentos", desc: "Ponto formal de decisão em um projeto onde é avaliado se ele pode avançar para a próxima fase." },
-            { term: "Baseline", category: "Projetos e Investimentos", desc: "Linha de base aprovada do projeto, utilizada como referência para comparar prazo, custo e escopo ao longo da execução." },
-            { term: "Curva S", category: "Projetos e Investimentos", desc: "Gráfico que mostra a evolução acumulada do progresso físico ou financeiro de um projeto ao longo do tempo." },
-            { term: "EAP (Estrutura Analítica do Projeto)", category: "Projetos e Investimentos", desc: "Decomposição hierárquica do escopo do projeto em entregas e pacotes de trabalho." },
-            { term: "Cronograma", category: "Projetos e Investimentos", desc: "Planejamento temporal das atividades do projeto, indicando datas de início, término e dependências." },
-            { term: "Stakeholder", category: "Projetos e Investimentos", desc: "Pessoa, grupo ou organização que pode influenciar ou ser impactada pelo projeto." },
-            { term: "Escopo", category: "Projetos e Investimentos", desc: "Conjunto de entregas, atividades e objetivos que fazem parte do projeto." },
-            { term: "Marco (Milestone)", category: "Projetos e Investimentos", desc: "Evento importante que representa a conclusão de uma etapa relevante do projeto." },
-            { term: "Caminho Crítico", category: "Projetos e Investimentos", desc: "Sequência de atividades que determina a duração mínima do projeto." },
-            { term: "ROI (Return on Investment)", category: "Custos e Viabilidade Econômica", desc: "Indicador que mede o retorno financeiro obtido em relação ao investimento realizado." },
-            { term: "TIR (Taxa Interna de Retorno)", category: "Custos e Viabilidade Econômica", desc: "Taxa de desconto que faz o valor presente líquido de um investimento ser igual a zero." },
-            { term: "VPL (Valor Presente Líquido)", category: "Custos e Viabilidade Econômica", desc: "Diferença entre receitas futuras descontadas e o investimento inicial." },
-            { term: "EBITDA", category: "Custos e Viabilidade Econômica", desc: "Indicador financeiro que representa o resultado operacional antes de juros, impostos, depreciação e amortização." },
-            { term: "Payback", category: "Custos e Viabilidade Econômica", desc: "Tempo necessário para recuperar o valor investido em um projeto." },
-            { term: "Fluxo de Caixa", category: "Custos e Viabilidade Econômica", desc: "Movimentação de entradas e saídas de recursos financeiros ao longo do tempo." },
-            { term: "Custo de Ciclo de Vida (LCC)", category: "Custos e Viabilidade Econômica", desc: "Avaliação de todos os custos associados a um ativo durante sua vida útil." },
-            { term: "KPI (Key Performance Indicator)", category: "Indicadores e Gestão", desc: "Indicador-chave utilizado para medir o desempenho de um processo ou objetivo." },
-            { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores e Gestão", desc: "Indicador de eficiência global dos equipamentos baseado em disponibilidade, desempenho e qualidade." },
-            { term: "MTBF (Mean Time Between Failures)", category: "Indicadores e Gestão", desc: "Tempo médio entre falhas de um equipamento." },
-            { term: "MTTR (Mean Time To Repair)", category: "Indicadores e Gestão", desc: "Tempo médio necessário para reparar um equipamento após uma falha." },
-            { term: "Disponibilidade Física (DF)", category: "Indicadores e Gestão", desc: "Percentual do tempo em que um equipamento está apto a operar." },
-            { term: "Utilização Física (UF)", category: "Indicadores e Gestão", desc: "Percentual do tempo disponível em que o equipamento foi efetivamente utilizado." },
-            { term: "Confiabilidade", category: "Indicadores e Gestão", desc: "Probabilidade de um equipamento desempenhar sua função sem falhar durante determinado período." },
-            { term: "Produtividade", category: "Indicadores e Gestão", desc: "Relação entre a produção obtida e os recursos utilizados." },
-            { term: "Throughput", category: "Indicadores e Gestão", desc: "Quantidade de material processado ou transportado em determinado período." },
-            { term: "SLA (Service Level Agreement)", category: "Indicadores e Gestão", desc: "Acordo que estabelece níveis mínimos de desempenho de um serviço." },
-            { term: "RAC (Requisitos de Atividades Críticas)", category: "Segurança", desc: "Conjunto de regras corporativas para controlar atividades de alto risco." },
-            { term: "LOTO (Lockout/Tagout)", category: "Segurança", desc: "Procedimento de bloqueio e etiquetagem para impedir energização acidental." },
-            { term: "Bow Tie", category: "Segurança", desc: "Metodologia gráfica que relaciona causas, controles preventivos, evento crítico e consequências." },
-            { term: "Incidente", category: "Segurança", desc: "Evento não planejado que poderia ter resultado em perdas." },
             { term: "Acidente", category: "Segurança", desc: "Evento não planejado que gera danos a pessoas, equipamentos ou meio ambiente." },
-            { term: "Quase Acidente", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
-            { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
-            { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
-            { term: "As Built", category: "Engenharia e Documentação", desc: "Documento atualizado refletindo exatamente como o empreendimento foi executado em campo." },
-            { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
-            { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
-            { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
-            { term: "Diagrama Unifilar", category: "Engenharia e Documentação", desc: "Representação simplificada de sistemas elétricos." },
-            { term: "Fluxograma", category: "Engenharia e Documentação", desc: "Representação gráfica de um processo." },
-            { term: "Revisão de Projeto", category: "Engenharia e Documentação", desc: "Atualização formal de documentos de engenharia." },
-            { term: "Comissionamento", category: "Engenharia e Documentação", desc: "Processo de verificação e testes para garantir que sistemas atendam aos requisitos de projeto." },
-            { term: "Mancal", category: "Elementos de Máquinas", desc: "Elemento que apoia e guia eixos rotativos." },
-            { term: "Eixo", category: "Elementos de Máquinas", desc: "Componente mecânico responsável por transmitir torque e movimento." },
             { term: "Acoplamento", category: "Elementos de Máquinas", desc: "Dispositivo utilizado para conectar dois eixos." },
-            { term: "Redutor", category: "Elementos de Máquinas", desc: "Equipamento destinado a reduzir velocidade e aumentar torque." },
-            { term: "Chaveta", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir torque entre eixo e cubo." },
-            { term: "Rolamento", category: "Elementos de Máquinas", desc: "Elemento mecânico que reduz atrito entre partes móveis." },
-            { term: "Correia Transportadora", category: "Elementos de Máquinas", desc: "Elemento flexível utilizado para movimentação contínua de materiais." },
-            { term: "Tambor", category: "Elementos de Máquinas", desc: "Componente cilíndrico que traciona ou direciona correias transportadoras." },
-            { term: "Polia", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmissão de potência por correias." },
-            { term: "Engrenagem", category: "Elementos de Máquinas", desc: "Componente mecânico utilizado para transmissão de movimento e torque." },
-            { term: "TCLD (Transportador de Correia de Longa Distância)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de correias utilizado para transporte de minério em grandes distâncias." },
-            { term: "Recuperadora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para retomar material estocado em pilhas." },
-            { term: "Empilhadeira de Minério", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado à formação de pilhas de estocagem." },
-            { term: "Hopper", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura de armazenamento temporário e alimentação de material." },
             { term: "Alimentador de Sapata", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para dosagem e alimentação controlada de material." },
-            { term: "Virador de Vagões", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para descarregar vagões através da rotação da composição." },
+            { term: "AMV (Aparelho de Muda Via)", category: "Ferrovia", desc: "Dispositivo da superestrutura ferroviária que permite a ramificação e o cruzamento de vias férreas (ex: desvios e agulhas)." },
+            { term: "As Built", category: "Engenharia e Documentação", desc: "Documento atualizado refletindo exatamente como o empreendimento foi executado em campo." },
+            { term: "Balança Integradora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para medição contínua da massa transportada por correias." },
+            { term: "Bacia de Contenção", category: "Drenagem de Pilhas e Geotecnia", desc: "Estrutura reservatório destinada a reter e acumular sedimentos sólidos carreados pelo escoamento superficial das pilhas de minério antes do lançamento na bacia hidrográfica." },
+            { term: "Baseline", category: "Projetos e Investimentos", desc: "Linha de base aprovada do projeto, utilizada como referência para comparar prazo, custo e escopo ao longo da execução." },
+            { term: "Berma de Segurança", category: "Drenagem de Pilhas e Geotecnia", desc: "Patamar horizontal intermediário criado nos taludes das pilhas de minério para reduzir a velocidade do fluxo de água pluvial e reter pequenos escorregamentos." },
+            { term: "Bitola", category: "Ferrovia", desc: "Distância interna entre as faces activas dos cabeçotes dos trilhos (ex: bitola larga de 1.600 mm padrão na Vale)." },
+            { term: "Boleto", category: "Ferrovia", desc: "Parte superior do trilho sobre a qual rolam as rodas dos vagões e locomotivas." },
+            { term: "Bow Tie", category: "Segurança", desc: "Metodologia gráfica que relaciona causas, controles preventivos, evento crítico e consequências." },
+            { term: "Caminho de Rolamento", category: "Infraestrutura de Equipamentos", desc: "Vigas e trilhos estruturados no solo ou em pórticos sobre os quais se deslocam máquinas de grande porte como recuperadoras e empilhadeiras de pátio." },
+            { term: "Caminho Crítico", category: "Projetos e Investimentos", desc: "Sequência de atividades que determina a duração mínima do projeto." },
+            { term: "Canaleta de Cresta", category: "Drenagem de Pilhas e Geotecnia", desc: "Dreno superficial implantado na parte superior (borda) das pilhas de minério ou taludes para captar e desviar a água da chuva antes que ela desça pela encosta." },
+            { term: "Canaleta de Pé", category: "Drenagem de Pilhas e Geotecnia", desc: "Sistema de drenagem instalado na base do talude da pilha de minério para recolher toda a água escoada e direcioná-la aos caixões de areia e caixas de retenção." },
+            { term: "CAPEX (Capital Expenditure)", category: "Projetos e Investimentos", desc: "Investimentos destinados à aquisição, ampliação ou modernização de ativos permanentes, como equipamentos, instalações e infraestrutura." },
             { term: "Carregador de Navios", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado ao carregamento de minério em embarcações." },
             { term: "Chute", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura que direciona o fluxo de material entre equipamentos." },
-            { term: "Pátio de Estocagem", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Área destinada à formação e armazenamento de pilhas de minério." },
-            { term: "Balança Integradora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para medição contínua da massa transportada por correias." },
+            { term: "Chaveta", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmitir torque entre eixo e cubo." },
+            { term: "Comissionamento", category: "Engenharia e Documentação", desc: "Processo de verificação e testes para garantir que sistemas atendam aos requisitos de projeto." },
+            { term: "Confiabilidade", category: "Indicadores e Gestão", desc: "Probabilidade de um equipamento desempenhar sua função sem falhar durante determinado período." },
+            { term: "Correia Transportadora", category: "Elementos de Máquinas", desc: "Elemento flexível utilizado para movimentação contínua de materiais." },
+            { term: "Cronograma", category: "Projetos e Investimentos", desc: "Planejamento temporal das atividades do projeto, indicando datas de início, término e dependências." },
+            { term: "Curva S", category: "Projetos e Investimentos", desc: "Gráfico que mostra a evolução acumulada do progresso físico ou financeiro de um projeto ao longo do tempo." },
+            { term: "Custo de Ciclo de Vida (LCC)", category: "Custos e Viabilidade Econômica", desc: "Avaliação de todos os custos associados a um ativo durante sua vida útil." },
             { term: "Detector de Metais", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de proteção utilizado para identificar objetos metálicos indesejados." },
-            { term: "Separador Magnético", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para remoção de partículas metálicas ferromagnéticas." }
+            { term: "Diagrama Unifilar", category: "Engenharia e Documentação", desc: "Representação simplificada de sistemas elétricos." },
+            { term: "Disponibilidade Física (DF)", category: "Indicadores e Gestão", desc: "Percentual do tempo em que um equipamento está apto a operar." },
+            { term: "Dormente", category: "Ferrovia", desc: "Elemento estrutural transversal (de madeira, aço ou concreto) que suporta e fixa os trilhos, distribuindo a carga para o lastro." },
+            { term: "EAP (Estrutura Analítica do Projeto)", category: "Projetos e Investimentos", desc: "Decomposição hierárquica do escopo do projeto em entregas e pacotes de trabalho." },
+            { term: "EBITDA", category: "Custos e Viabilidade Econômica", desc: "Indicador financeiro que representa o resultado operacional antes de juros, impostos, depreciação e amortização." },
+            { term: "Eclisa", category: "Ferrovia", desc: "Chapa de aço utilizada para unir as extremidades de dois trilhos adjacentes na via férrea." },
+            { term: "Eixo", category: "Elementos de Máquinas", desc: "Componente mecânico responsável por transmitir torque e movimento." },
+            { term: "Empilhadeira de Minério", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento destinado à formação de pilhas de estocagem." },
+            { term: "Engrenagem", category: "Elementos de Máquinas", desc: "Componente mecânico utilizado para transmissão de movimento e torque." },
+            { term: "Escopo", category: "Projetos e Investimentos", desc: "Conjunto de entregas, atividades e objetivos que fazem parte do projeto." },
+            { term: "Especificação Técnica", category: "Engenharia e Documentação", desc: "Documento que define requisitos mínimos para aquisição ou construção." },
+            { term: "FEL (Front-End Loading)", category: "Projetos e Investimentos", desc: "Metodologia de desenvolvimento de projetos que busca reduzir riscos através do detalhamento progressivo antes da aprovação dos investimentos." },
+            { term: "Fluxo de Caixa", category: "Custos e Viabilidade Econômica", desc: "Movimentação de entradas e saídas de recursos financeiros ao longo do tempo." },
+            { term: "Fluxograma", category: "Engenharia e Documentação", desc: "Representação gráfica de um processo." },
+            { term: "Folha de Dados", category: "Engenharia e Documentação", desc: "Documento que reúne parâmetros técnicos e requisitos de um equipamento." },
+            { term: "Gate", category: "Projetos e Investimentos", desc: "Ponto formal de decisão em um projeto onde é avaliado se ele pode avançar para a próxima fase." },
+            { term: "Hopper", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Estrutura de armazenamento temporário e alimentação de material." },
+            { term: "Incidente", category: "Segurança", desc: "Evento não planejado que poderia ter resultado em perdas." },
+            { term: "KPI (Key Performance Indicator)", category: "Indicadores e Gestão", desc: "Indicador-chave utilizado para medir o desempenho de um processo ou objetivo." },
+            { term: "Lastro", category: "Ferrovia", desc: "Camada de brita (pedra esmagada) compactada sobre a qual assentam-se os dormentes, garantindo estabilidade e drenagem da via." },
+            { term: "LOTO (Lockout/Tagout)", category: "Segurança", desc: "Procedimento de bloqueio e etiquetagem para impedir energização acidental." },
+            { term: "Mancal", category: "Elementos de Máquinas", desc: "Elemento que apoia e guia eixos rotativos." },
+            { term: "Marco (Milestone)", category: "Projetos e Investimentos", desc: "Evento importante que representa a conclusão de uma etapa relevante do projeto." },
+            { term: "Memorial Descritivo", category: "Engenharia e Documentação", desc: "Documento que descreve características técnicas e funcionais de um projeto." },
+            { term: "MTBF (Mean Time Between Failures)", category: "Indicadores e Gestão", desc: "Tempo médio entre falhas de um equipamento." },
+            { term: "MTTR (Mean Time To Repair)", category: "Indicadores e Gestão", desc: "Tempo médio necessário para reparar um equipamento após uma falha." },
+            { term: "OEE (Overall Equipment Effectiveness)", category: "Indicadores e Gestão", desc: "Indicador de eficiência global dos equipamentos baseado em disponibilidade, desempenho e qualidade." },
+            { term: "OPEX (Operational Expenditure)", category: "Projetos e Investimentos", desc: "Despesas necessárias para manter a operação funcionando, como manutenção, energia, materiais de consumo e contratos de serviços." },
+            { term: "Pátio de Estocagem", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Área destinada à formação e armazenamento de pilhas de minério." },
+            { term: "Payback", category: "Custos e Viabilidade Econômica", desc: "Tempo necessário para recuperar o valor investido em um projeto." },
+            { term: "Perigo", category: "Segurança", desc: "Fonte ou situação com potencial para causar danos." },
+            { term: "Pipe Rack", category: "Infraestrutura Industrial", desc: "Estrutura metálica ou de concreto em formato de pórtico elevada destinada a suportar e organizar tubulações, cabos elétricos e de instrumentação entre áreas da planta." },
+            { term: "Polia", category: "Elementos de Máquinas", desc: "Elemento utilizado para transmissão de potência por correias." },
+            { term: "Produtividade", category: "Indicadores e Gestão", desc: "Relação entre a produção obtida e os recursos utilizados." },
+            { term: "Quase Acidente", category: "Segurança", desc: "Ocorrência que não gerou consequências, mas possuía potencial para gerar." },
+            { term: "RAC (Requisitos de Atividades Críticas)", category: "Segurança", desc: "Conjunto de regras corporativas para controlar atividades de alto risco." },
+            { term: "Recuperadora", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para retomar material estocado em pilhas." },
+            { term: "Redutor", category: "Elementos de Máquinas", desc: "Equipamento destinado a reduzir velocidade e aumentar torque." },
+            { term: "Revisão de Projeto", category: "Engenharia e Documentação", desc: "Atualização formal de documentos de engenharia." },
+            { term: "Rip-rap", category: "Geotecnia e Drenagem", desc: "Revestimento de proteção superficial composto por blocos de rocha arrumados ou lançados em taludes, margens de canais ou bases de pilhas para evitar a erosão hídrica." },
+            { term: "Risco", category: "Segurança", desc: "Combinação da probabilidade de ocorrência e da severidade das consequências." },
+            { term: "ROI (Return on Investment)", category: "Custos e Viabilidade Econômica", desc: "Indicador que mede o retorno financeiro obtido em relação ao investimento realizado." },
+            { term: "Rolamento", category: "Elementos de Máquinas", desc: "Elemento mecânico que reduz atrito entre partes móveis." },
+            { term: "Separador Magnético", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para remoção de partículas metálicas ferromagnéticas." },
+            { term: "Sistema de Drenagem Forçada", category: "Drenagem de Pilhas e Geotecnia", desc: "Conjunto de bombeamento e tubulações dedicado a recalcar de forma ativa a água acumulada em sumps, valas profundas ou áreas de cavas e pátios onde a gravidade não é suficiente." },
+            { term: "SLA (Service Level Agreement)", category: "Indicadores e Gestão", desc: "Acordo que estabelece níveis mínimos de desempenho de um serviço." },
+            { term: "Stakeholder", category: "Projetos e Investimentos", desc: "Pessoa, grupo ou organização que pode influenciar ou ser impactada pelo projeto." },
+            { term: "Talão", category: "Ferrovia", desc: "Extremidade usinada do trilho ou agulha em um AMV onde ocorrem articulações e conexões de transição geométrica." },
+            { term: "Talude", category: "Geotecnia", desc: "Superfície inclinada de corte ou aterro que delimita os terraplenos, taludes de pilhas de minério e cavas industriais." },
+            { term: "Tambor", category: "Elementos de Máquinas", desc: "Componente cilíndrico que traciona ou direciona correias transportadoras." },
+            { term: "TAP (Termo de Abertura de Projeto)", category: "Projetos e Investimentos", desc: "Documento que formaliza o início de um projeto, definindo objetivos, escopo, responsáveis e recursos iniciais." },
+            { term: "TCLD (Transportador de Correia de Longa Distância)", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Sistema de correias utilizado para transporte de minério em grandes distâncias." },
+            { term: "Throughput", category: "Indicadores e Gestão", desc: "Quantidade de material processado ou transportado em determinado período." },
+            { term: "TIR (Taxa Interna de Retorno)", category: "Custos e Viabilidade Econômica", desc: "Taxa de desconto que faz o valor presente líquido de um investimento ser igual a zero." },
+            { term: "Trilho", category: "Ferrovia", desc: "Perfil de aço laminado com seção em forma de 'I' especial (perfil Vignole) que serve de guia e suporte de rolamento para os trens." },
+            { term: "Utilização Física (UF)", category: "Indicadores e Gestão", desc: "Percentual do tempo disponível em que o equipamento foi efetivamente utilizado." },
+            { term: "Virador de Vagões", category: "Equipamentos de Expedição Ferroviária e Manuseio de Minério", desc: "Equipamento utilizado para descarregar vagões através da rotação da composição." },
+            { term: "VPL (Valor Presente Líquido)", category: "Custos e Viabilidade Econômica", desc: "Diferença entre receitas futuras descontadas e o investimento inicial." }
         ];
 
         let appData = {
@@ -1034,24 +1052,26 @@
 
             modulesToCheck.forEach(mod => {
                 const list = appData[mod];
-                for (let i = list.length - 1; i >= 0; i--) {
-                    const item = list[i];
-                    const st = calculateAutomaticStatus(item.prazo, item.status);
-                    if (st !== 'Concluído' && item.prazo) {
-                        const itemDate = parseDateISO(item.prazo);
-                        itemDate.setHours(0,0,0,0);
-                        if (itemDate <= today && !item._movedToDaily) {
-                            const cleanDesc = item.descricao.replace(/^\[Sincronizado\]\s*/, '');
-                            const exists = appData.demandas_dia.some(d => d.descricao === cleanDesc);
-                            if (!exists) {
-                                appData.demandas_dia.push({
-                                    ...item,
-                                    descricao: cleanDesc,
-                                    categoria: item.categoria || 'Geral',
-                                    _movedFrom: mod
-                                });
+                if (list) {
+                    for (let i = list.length - 1; i >= 0; i--) {
+                        const item = list[i];
+                        const st = calculateAutomaticStatus(item.prazo, item.status);
+                        if (st !== 'Concluído' && item.prazo) {
+                            const itemDate = parseDateISO(item.prazo);
+                            itemDate.setHours(0,0,0,0);
+                            if (itemDate <= today && !item._movedToDaily) {
+                                const cleanDesc = item.descricao.replace(/^\[Sincronizado\]\s*/, '');
+                                const exists = appData.demandas_dia.some(d => d.descricao === cleanDesc);
+                                if (!exists) {
+                                    appData.demandas_dia.push({
+                                        ...item,
+                                        descricao: cleanDesc,
+                                        categoria: item.categoria || 'Geral',
+                                        _movedFrom: mod
+                                    });
+                                }
+                                list.splice(i, 1);
                             }
-                            list.splice(i, 1);
                         }
                     }
                 }
