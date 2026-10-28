@@ -1027,7 +1027,6 @@
             return 'Em Andamento';
         }
 
-        // Lógica de Sincronização: Move itens para Demandas do Dia quando atingem o prazo e remove da lista original
         function processSyncAndDailyDemands() {
             const today = new Date();
             today.setHours(0,0,0,0);
@@ -1042,7 +1041,6 @@
                         const itemDate = parseDateISO(item.prazo);
                         itemDate.setHours(0,0,0,0);
                         if (itemDate <= today && !item._movedToDaily) {
-                            // Move para Demandas do Dia
                             const cleanDesc = item.descricao.replace(/^\[Sincronizado\]\s*/, '');
                             const exists = appData.demandas_dia.some(d => d.descricao === cleanDesc);
                             if (!exists) {
@@ -1053,7 +1051,6 @@
                                     _movedFrom: mod
                                 });
                             }
-                            // Remove da lista original
                             list.splice(i, 1);
                         }
                     }
@@ -1106,10 +1103,14 @@
             renderNotes();
         }
 
+        function renderMelhorias() {
+            renderGenericTable('melhorias');
+        }
+
         function renderBadges() {
-            const countOpen = (arr) => arr.filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
+            const countOpen = (arr) => arr ? arr.filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length : 0;
             
-            const projOpen = appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length;
+            const projOpen = appData.projects ? appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length : 0;
             document.getElementById('badge-projetos').innerText = projOpen;
 
             document.getElementById('badge-demandas_dia').innerText = getVirtualDailyDemands().filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
@@ -1118,16 +1119,18 @@
             document.getElementById('badge-analise_falha').innerText = countOpen(appData.analise_falha);
             document.getElementById('badge-documentacao').innerText = countOpen(appData.documentacao);
             document.getElementById('badge-melhorias').innerText = countOpen(appData.melhorias);
-            document.getElementById('badge-anotacoes').innerText = appData.anotacoes.length;
+            document.getElementById('badge-anotacoes').innerText = appData.anotacoes ? appData.anotacoes.length : 0;
 
             let sleepOpen = 0;
-            appData.tiram_sono.forEach(s => {
-                if (s.acoes && s.acoes.length > 0) {
-                    sleepOpen += s.acoes.filter(a => a.status !== 'Concluído').length;
-                } else if (calculateAutomaticStatus(s.prazo, s.status) !== 'Concluído') {
-                    sleepOpen++;
-                }
-            });
+            if (appData.tiram_sono) {
+                appData.tiram_sono.forEach(s => {
+                    if (s.acoes && s.acoes.length > 0) {
+                        sleepOpen += s.acoes.filter(a => a.status !== 'Concluído').length;
+                    } else if (calculateAutomaticStatus(s.prazo, s.status) !== 'Concluído') {
+                        sleepOpen++;
+                    }
+                });
+            }
             document.getElementById('badge-tiram_sono').innerText = sleepOpen;
         }
 
@@ -1144,63 +1147,69 @@
             
             allModules.forEach(mod => {
                 const list = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
-                list.forEach(item => {
-                    total++;
-                    const st = calculateAutomaticStatus(item.prazo, item.status);
-                    if (st === 'Concluído') {
-                        done++;
-                    } else {
-                        const target = parseDateISO(item.prazo);
-                        target.setHours(0,0,0,0);
-                        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-
-                        if (diffDays < 0) {
-                            delayed++;
-                            farolVencidas.push({ desc: item.descricao, prazo: formatDateBR(target) });
-                        } else if (diffDays === 0) {
-                            noTime++;
-                            farol7.push({ desc: item.descricao, prazo: 'Vence Hoje' });
-                        } else if (diffDays <= 7) {
-                            noTime++;
-                            farol7.push({ desc: item.descricao, prazo: formatDateBR(target) });
-                        } else if (diffDays <= 30) {
-                            noTime++;
-                            farol30.push({ desc: item.descricao, prazo: formatDateBR(target) });
+                if (list) {
+                    list.forEach(item => {
+                        total++;
+                        const st = calculateAutomaticStatus(item.prazo, item.status);
+                        if (st === 'Concluído') {
+                            done++;
                         } else {
-                            noTime++;
+                            const target = parseDateISO(item.prazo);
+                            target.setHours(0,0,0,0);
+                            const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+                            if (diffDays < 0) {
+                                delayed++;
+                                farolVencidas.push({ desc: item.descricao, prazo: formatDateBR(target) });
+                            } else if (diffDays === 0) {
+                                noTime++;
+                                farol7.push({ desc: item.descricao, prazo: 'Vence Hoje' });
+                            } else if (diffDays <= 7) {
+                                noTime++;
+                                farol7.push({ desc: item.descricao, prazo: formatDateBR(target) });
+                            } else if (diffDays <= 30) {
+                                noTime++;
+                                farol30.push({ desc: item.descricao, prazo: formatDateBR(target) });
+                            } else {
+                                noTime++;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
-            appData.tiram_sono.forEach(item => {
-                item.acoes.forEach(ac => {
-                    total++;
-                    const st = calculateAutomaticStatus(ac.prazo, ac.status);
-                    if (st === 'Concluído') {
-                        done++;
-                    } else {
-                        const target = parseDateISO(ac.prazo);
-                        target.setHours(0,0,0,0);
-                        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-                        if (diffDays < 0) {
-                            delayed++;
-                            farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
-                        } else if (diffDays === 0) {
-                            noTime++;
-                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: 'Vence Hoje' });
-                        } else if (diffDays <= 7) {
-                            noTime++;
-                            farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
-                        } else if (diffDays <= 30) {
-                            noTime++;
-                            farol30.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
-                        } else {
-                            noTime++;
-                        }
+            if (appData.tiram_sono) {
+                appData.tiram_sono.forEach(item => {
+                    if (item.acoes) {
+                        item.acoes.forEach(ac => {
+                            total++;
+                            const st = calculateAutomaticStatus(ac.prazo, ac.status);
+                            if (st === 'Concluído') {
+                                done++;
+                            } else {
+                                const target = parseDateISO(ac.prazo);
+                                target.setHours(0,0,0,0);
+                                const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+                                if (diffDays < 0) {
+                                    delayed++;
+                                    farolVencidas.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
+                                } else if (diffDays === 0) {
+                                    noTime++;
+                                    farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: 'Vence Hoje' });
+                                } else if (diffDays <= 7) {
+                                    noTime++;
+                                    farol7.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
+                                } else if (diffDays <= 30) {
+                                    noTime++;
+                                    farol30.push({ desc: `${item.name} - ${ac.desc}`, prazo: formatDateBR(target) });
+                                } else {
+                                    noTime++;
+                                }
+                            }
+                        });
                     }
                 });
-            });
+            }
 
             document.getElementById('statTotal').innerText = total;
             document.getElementById('statOnTime').innerText = noTime;
@@ -1221,7 +1230,7 @@
             const container = document.getElementById('projectsContainer');
             if (!container) return;
 
-            if (appData.projects.length === 0) {
+            if (!appData.projects || appData.projects.length === 0) {
                 container.innerHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhum projeto cadastrado. Clique em "Novo Projeto" para iniciar.</div>`;
                 return;
             }
@@ -1485,9 +1494,9 @@
 
             if (!tbody) return;
             
+            if (!appData[mod]) appData[mod] = [];
             let items = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
             
-            // Filtro Múltiplo de Status
             const selectedFilters = getSelectedFilterStatus(mod);
             const labelEl = document.getElementById(`filter-label-${mod}`);
             if (labelEl) {
@@ -1799,6 +1808,8 @@
             const idx = document.getElementById('formItemId').value;
             const prazoVal = document.getElementById('inputPrazo').value;
 
+            if (!appData[mod]) appData[mod] = [];
+
             let item = {
                 descricao: document.getElementById('inputDesc').value,
                 prazo: prazoVal,
@@ -1880,14 +1891,27 @@
             const idx = document.getElementById('noteId').value;
             const title = document.getElementById('noteTitle').value;
             const content = document.getElementById('noteContentEditor').innerHTML;
-            const dateStr = formatDateBR(new Date());
+            const nowStr = formatDateBR(new Date()) + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
 
-            const noteItem = { title, content, date: dateStr };
+            if (!appData.anotacoes) {
+                appData.anotacoes = [];
+            }
 
             if (idx !== '') {
-                appData.anotacoes[idx] = noteItem;
+                const existingNote = appData.anotacoes[idx];
+                appData.anotacoes[idx] = {
+                    title: title,
+                    content: content,
+                    createdAt: existingNote.createdAt || nowStr,
+                    updatedAt: nowStr
+                };
             } else {
-                appData.anotacoes.push(noteItem);
+                appData.anotacoes.push({
+                    title: title,
+                    content: content,
+                    createdAt: nowStr,
+                    updatedAt: nowStr
+                });
             }
 
             closeNoteModal();
@@ -1898,7 +1922,7 @@
             const container = document.getElementById('notesContainer');
             if (!container) return;
 
-            if (appData.anotacoes.length === 0) {
+            if (!appData.anotacoes || appData.anotacoes.length === 0) {
                 container.innerHTML = `<div class="col-span-2 bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhuma anotação cadastrada. Clique em "Nova Anotação" para iniciar.</div>`;
                 return;
             }
@@ -1907,8 +1931,13 @@
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-3">
                     <div>
                         <div class="flex justify-between items-start border-b pb-2 mb-2">
-                            <h3 class="font-bold text-slate-900 text-sm">${note.title}</h3>
-                            <span class="text-[10px] text-slate-400 font-medium">${note.date}</span>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">${note.title}</h3>
+                                <div class="text-[10px] text-slate-400 space-x-2 mt-0.5">
+                                    <span><i class="fa-regular fa-calendar-plus mr-1"></i>Criada: ${note.createdAt || 'N/D'}</span>
+                                    <span><i class="fa-regular fa-pen-to-square mr-1"></i>Editada: ${note.updatedAt || note.createdAt || 'N/D'}</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="text-xs text-slate-700 max-h-48 overflow-y-auto space-y-2 leading-relaxed">
                             ${note.content}
@@ -1933,7 +1962,7 @@
             const container = document.getElementById('sleeplessContainer');
             if (!container) return;
 
-            if (appData.tiram_sono.length === 0) {
+            if (!appData.tiram_sono || appData.tiram_sono.length === 0) {
                 container.innerHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhuma atividade crítica cadastrada.</div>`;
                 return;
             }
@@ -2060,6 +2089,8 @@
             e.preventDefault();
             const idx = document.getElementById('sleepId').value;
             const prazoVal = document.getElementById('sleepPrazo').value;
+
+            if (!appData.tiram_sono) appData.tiram_sono = [];
 
             let item = {
                 name: document.getElementById('sleepName').value,
@@ -2257,3 +2288,4 @@
     </script>
 </body>
 </html>
+
