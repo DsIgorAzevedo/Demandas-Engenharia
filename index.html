@@ -63,6 +63,10 @@
                     <div class="flex items-center space-x-2.5"><i class="fa-solid fa-diagram-project w-4 text-center"></i><span>Gestão de Projetos</span></div>
                     <span id="badge-projetos" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
                 </button>
+                <button onclick="switchTab('moc')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="moc">
+                    <div class="flex items-center space-x-2.5"><i class="fa-solid fa-code-branch w-4 text-center"></i><span>Gestão de MoC</span></div>
+                    <span id="badge-moc" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
+                </button>
                 <button onclick="switchTab('demandas_dia')" class="tab-btn w-full px-3 py-2.5 rounded-lg font-medium transition text-brand-light hover:bg-white/10 flex items-center justify-between" data-tab="demandas_dia">
                     <div class="flex items-center space-x-2.5"><i class="fa-solid fa-calendar-day w-4 text-center"></i><span>Demandas do Dia</span></div>
                     <span id="badge-demandas_dia" class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
@@ -222,6 +226,20 @@
                 <div class="grid grid-cols-1 gap-6" id="projectsContainer"></div>
             </section>
 
+            <!-- 2.1 GESTÃO DE MOC (Novo Espelho de Projetos) -->
+            <section id="tab-moc" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Gestão de MoC (Management of Change)</h2>
+                        <p class="text-xs text-slate-500">Controle de gestão de mudanças, prazos, ações (Curva S) e documentação.</p>
+                    </div>
+                    <button onclick="openModalMoc()" class="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow transition">
+                        <i class="fa-solid fa-plus"></i><span>Novo MoC</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-6" id="mocContainer"></div>
+            </section>
+
             <!-- 3. DEMANDAS DO DIA -->
             <section id="tab-demandas_dia" class="tab-content hidden space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
@@ -234,13 +252,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('demandas_dia')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-demandas_dia">Filtrar Status (Todos)</span>
+                                <span id="filter-label-demandas_dia">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-demandas_dia" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('demandas_dia')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -280,13 +298,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('acoes_semana')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-acoes_semana">Filtrar Status (Todos)</span>
+                                <span id="filter-label-acoes_semana">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-acoes_semana" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('acoes_semana')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -326,13 +344,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('cpia')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-cpia">Filtrar Status (Todos)</span>
+                                <span id="filter-label-cpia">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-cpia" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('cpia')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('cpia')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('cpia')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('cpia')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('cpia')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('cpia')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('cpia')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -372,13 +390,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('analise_falha')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-analise_falha">Filtrar Status (Todos)</span>
+                                <span id="filter-label-analise_falha">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-analise_falha" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('analise_falha')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('analise_falha')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('analise_falha')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('analise_falha')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('analise_falha')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('analise_falha')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('analise_falha')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -418,13 +436,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('documentacao')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-documentacao">Filtrar Status (Todos)</span>
+                                <span id="filter-label-documentacao">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-documentacao" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('documentacao')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('documentacao')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('documentacao')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('documentacao')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('documentacao')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('documentacao')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('documentacao')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -478,13 +496,13 @@
                         <div class="relative">
                             <button onclick="toggleMultiFilterDropdown('melhorias')" class="text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white font-medium flex items-center space-x-2">
                                 <i class="fa-solid fa-filter text-brand"></i>
-                                <span id="filter-label-melhorias">Filtrar Status (Todos)</span>
+                                <span id="filter-label-melhorias">Filtrar Status</span>
                                 <i class="fa-solid fa-chevron-down text-[10px]"></i>
                             </button>
                             <div id="dropdown-filter-melhorias" class="hidden absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg p-3 z-20 space-y-2 text-xs">
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('melhorias')" class="rounded text-brand"><span>Em Andamento</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('melhorias')" class="rounded text-brand"><span>Atrasado</span></label>
-                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('melhorias')" class="rounded text-brand"><span>Vence Hoje</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Em Andamento" onchange="renderGenericTable('melhorias')" class="rounded text-brand" checked><span>Em Andamento</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Atrasado" onchange="renderGenericTable('melhorias')" class="rounded text-brand" checked><span>Atrasado</span></label>
+                                <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Vence Hoje" onchange="renderGenericTable('melhorias')" class="rounded text-brand" checked><span>Vence Hoje</span></label>
                                 <label class="flex items-center space-x-2 font-medium"><input type="checkbox" value="Concluído" onchange="renderGenericTable('melhorias')" class="rounded text-brand"><span>Concluído</span></label>
                             </div>
                         </div>
@@ -554,7 +572,7 @@
         </main>
     </div>
 
-    <!-- MODAIS -->
+    <!-- MODAL GENÉRICO -->
     <div id="genericModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
             <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
@@ -625,6 +643,7 @@
         </div>
     </div>
 
+    <!-- MODAL PROJETOS -->
     <div id="projectModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
             <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
@@ -705,6 +724,84 @@
         </div>
     </div>
 
+    <!-- MODAL MOC -->
+    <div id="mocModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+            <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
+                <h3 id="mocModalTitle" class="font-bold text-sm">Gerenciar MoC</h3>
+                <button onclick="closeMocModal()" class="text-white/80 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="mocForm" onsubmit="saveMoc(event)" class="p-6 space-y-4 text-xs overflow-y-auto flex-1">
+                <input type="hidden" id="mocId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Nome / Referência da MoC</label>
+                        <input type="text" id="mocName" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Sistema Produtivo</label>
+                        <select id="mocSystem" required class="w-full p-2 border border-slate-300 rounded-lg"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Descrição</label>
+                    <textarea id="mocDesc" rows="2" required class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Escopo</label>
+                        <textarea id="mocScope" rows="2" class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Equipes Envolvidas</label>
+                        <div id="mocTeamsContainer" class="grid grid-cols-2 gap-1.5 p-2 border border-slate-300 rounded-lg bg-slate-50 max-h-32 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prazo Geral (Cronograma)</label>
+                        <input type="date" id="mocSchedule" required class="w-full p-2 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Prioridade</label>
+                        <select id="mocPriority" class="w-full p-2 border border-slate-300 rounded-lg">
+                            <option value="Alta">Alta</option>
+                            <option value="Média">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="border-t pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block font-bold text-slate-800">Plano de Ação do MoC (Fases e Ações)</label>
+                        <span class="text-[11px] text-slate-500">Curva S calculada automaticamente pelas ações</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2 mb-2 bg-slate-50 p-3 rounded-xl border">
+                        <input type="text" id="mocActionDesc" placeholder="Descrição da ação/fase..." class="p-2 border border-slate-300 rounded-lg md:col-span-5">
+                        <input type="text" id="mocActionResp" placeholder="Responsável..." class="p-2 border border-slate-300 rounded-lg md:col-span-4">
+                        <input type="date" id="mocActionPrazo" class="p-2 border border-slate-300 rounded-lg md:col-span-2">
+                        <button type="button" onclick="addMocAction()" class="bg-brand text-white px-3 py-1.5 rounded-lg font-semibold md:col-span-1 flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div id="mocActionsList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                </div>
+                <div class="border-t pt-3">
+                    <label class="block font-semibold text-slate-700 mb-2">Documentação Vinculada à MoC</label>
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" id="mocDocDescInput" placeholder="Descrição do documento..." class="flex-1 p-2 border border-slate-300 rounded-lg">
+                        <input type="file" id="mocDocFileInput" class="p-1 border border-slate-300 rounded-lg text-xs w-48">
+                        <button type="button" onclick="addMocDoc()" class="bg-brand text-white px-3 py-1.5 rounded-lg">Adicionar</button>
+                    </div>
+                    <div id="mocDocsList" class="space-y-1 text-xs"></div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" onclick="closeMocModal()" class="px-4 py-2 border border-slate-300 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand text-white rounded-lg font-semibold">Salvar MoC</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL TIRAM O SONO -->
     <div id="sleeplessModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
             <div class="bg-brand text-white px-6 py-4 flex justify-between items-center">
@@ -793,7 +890,7 @@
             "Geral"
         ];
 
-        // GLOSSÁRIO TÉCNICO COMPLETO EM ORDEM ALFABÉTICA (COM TODOS OS TERMOS SOLICITADOS)
+        // GLOSSÁRIO TÉCNICO (resumido p/ layout não quebrar, mas com todos os itens mapeados antes)
         const GLOSSARY_DATA = [
             { term: "Acidente", category: "Segurança", desc: "Evento não planejado que gera danos a pessoas, equipamentos ou meio ambiente." },
             { term: "Acoplamento", category: "Elementos de Máquinas", desc: "Dispositivo utilizado para conectar dois eixos." },
@@ -884,6 +981,7 @@
 
         let appData = {
             projects: [],
+            moc: [],
             demandas_dia: [],
             acoes_semana: [],
             cpia: [],
@@ -897,6 +995,8 @@
         let currentAttachments = [];
         let currentProjectDocs = [];
         let currentProjectActions = [];
+        let currentMocDocs = [];
+        let currentMocActions = [];
         let currentSleepActions = [];
         let isMobileLayout = false;
 
@@ -912,10 +1012,7 @@
         function populateGlossaryCategories() {
             const selectEl = document.getElementById('glossaryCategoryFilter');
             if (!selectEl) return;
-            
-            // Extrai categorias únicas do GLOSSARY_DATA
             const categories = [...new Set(GLOSSARY_DATA.map(item => item.category))].sort();
-            
             selectEl.innerHTML = '<option value="">Todas as Categorias</option>' + 
                 categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
         }
@@ -949,7 +1046,7 @@
         }
 
         function populateSelects() {
-            const selects = ['projSystem', 'sleepSystem'];
+            const selects = ['projSystem', 'sleepSystem', 'mocSystem'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -957,11 +1054,21 @@
                 }
             });
 
-            const teamsContainer = document.getElementById('projTeamsContainer');
-            if (teamsContainer) {
-                teamsContainer.innerHTML = TEAMS_LIST.map(team => `
+            const teamsContainerP = document.getElementById('projTeamsContainer');
+            if (teamsContainerP) {
+                teamsContainerP.innerHTML = TEAMS_LIST.map(team => `
                     <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
                         <input type="checkbox" name="projTeamCheckbox" value="${team}" class="w-4 h-4 text-brand rounded">
+                        <span>${team}</span>
+                    </label>
+                `).join('');
+            }
+            
+            const teamsContainerM = document.getElementById('mocTeamsContainer');
+            if (teamsContainerM) {
+                teamsContainerM.innerHTML = TEAMS_LIST.map(team => `
+                    <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="mocTeamCheckbox" value="${team}" class="w-4 h-4 text-brand rounded">
                         <span>${team}</span>
                     </label>
                 `).join('');
@@ -1065,42 +1172,38 @@
             return 'Em Andamento';
         }
 
-        function processSyncAndDailyDemands() {
+        // Nova lógica não destrutiva que consolida virtualmente as demandas diárias
+        function getVirtualDailyDemands() {
             const today = new Date();
             today.setHours(0,0,0,0);
-            const modulesToCheck = ['acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
+            let virtualList = [];
+            
+            // Itens cadastrados manualmente no painel de Demandas do Dia
+            if (appData.demandas_dia) {
+                appData.demandas_dia.forEach((item, idx) => {
+                    virtualList.push({ ...item, _originalMod: 'demandas_dia', _originalIdx: idx });
+                });
+            }
 
+            // Mapeando itens pendentes dos outros módulos
+            const modulesToCheck = ['acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
             modulesToCheck.forEach(mod => {
                 const list = appData[mod];
                 if (list) {
-                    for (let i = list.length - 1; i >= 0; i--) {
-                        const item = list[i];
+                    list.forEach((item, idx) => {
                         const st = calculateAutomaticStatus(item.prazo, item.status);
                         if (st !== 'Concluído' && item.prazo) {
                             const itemDate = parseDateISO(item.prazo);
                             itemDate.setHours(0,0,0,0);
-                            if (itemDate <= today && !item._movedToDaily) {
-                                const cleanDesc = item.descricao.replace(/^\[Sincronizado\]\s*/, '');
-                                const exists = appData.demandas_dia.some(d => d.descricao === cleanDesc);
-                                if (!exists) {
-                                    appData.demandas_dia.push({
-                                        ...item,
-                                        descricao: cleanDesc,
-                                        categoria: item.categoria || 'Geral',
-                                        _movedFrom: mod
-                                    });
-                                }
-                                list.splice(i, 1);
+                            if (itemDate <= today) {
+                                virtualList.push({ ...item, _originalMod: mod, _originalIdx: idx });
                             }
                         }
-                    }
+                    });
                 }
             });
-        }
-
-        function getVirtualDailyDemands() {
-            processSyncAndDailyDemands();
-            return appData.demandas_dia;
+            
+            return virtualList;
         }
 
         function getStatusBadge(prazoStr, status) {
@@ -1133,6 +1236,7 @@
             renderBadges();
             renderDashboard();
             renderProjects();
+            renderMocs();
             renderGenericTable('demandas_dia');
             renderGenericTable('acoes_semana');
             renderGenericTable('cpia');
@@ -1152,6 +1256,9 @@
             
             const projOpen = appData.projects ? appData.projects.filter(p => calculateAutomaticStatus(p.schedule, p.status) !== 'Concluído').length : 0;
             document.getElementById('badge-projetos').innerText = projOpen;
+            
+            const mocOpen = appData.moc ? appData.moc.filter(m => calculateAutomaticStatus(m.schedule, m.status) !== 'Concluído').length : 0;
+            document.getElementById('badge-moc').innerText = mocOpen;
 
             document.getElementById('badge-demandas_dia').innerText = getVirtualDailyDemands().filter(i => calculateAutomaticStatus(i.prazo, i.status) !== 'Concluído').length;
             document.getElementById('badge-acoes_semana').innerText = countOpen(appData.acoes_semana);
@@ -1183,10 +1290,11 @@
             let farol7 = [];
             let farol30 = [];
 
+            // Avalia apenas as listas brutas (sem a lista virtual de Demandas do Dia, para não duplicar valores)
             const allModules = ['demandas_dia', 'acoes_semana', 'cpia', 'analise_falha', 'documentacao', 'melhorias'];
             
             allModules.forEach(mod => {
-                const list = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
+                const list = appData[mod];
                 if (list) {
                     list.forEach(item => {
                         total++;
@@ -1266,6 +1374,7 @@
             document.getElementById('farol30DiasList').innerHTML = farol30.length ? farol30.map(i => `<div class="p-2 bg-white rounded border border-blue-200"><p class="font-semibold text-blue-900 truncate">${i.desc}</p><span class="text-blue-600">Prazo: ${i.prazo}</span></div>`).join('') : '<p class="text-slate-500 italic">Nenhum item nos próximos 30 dias.</p>';
         }
 
+        // --- GESTÃO DE PROJETOS ---
         function renderProjects() {
             const container = document.getElementById('projectsContainer');
             if (!container) return;
@@ -1400,19 +1509,8 @@
             const desc = document.getElementById('projActionDesc').value;
             const resp = document.getElementById('projActionResp').value;
             const prazo = document.getElementById('projActionPrazo').value;
-
-            if (!desc || !prazo) {
-                alert('Preencha a descrição e o prazo da ação do projeto.');
-                return;
-            }
-
-            currentProjectActions.push({
-                desc: desc,
-                resp: resp,
-                prazo: prazo,
-                status: 'Em Andamento'
-            });
-
+            if (!desc || !prazo) { alert('Preencha a descrição e o prazo da ação do projeto.'); return; }
+            currentProjectActions.push({ desc: desc, resp: resp, prazo: prazo, status: 'Em Andamento' });
             document.getElementById('projActionDesc').value = '';
             document.getElementById('projActionResp').value = '';
             document.getElementById('projActionPrazo').value = '';
@@ -1447,18 +1545,11 @@
         function addProjectDoc() {
             const desc = document.getElementById('projDocDescInput').value;
             const fileInput = document.getElementById('projDocFileInput');
-            if (!desc || fileInput.files.length === 0) {
-                alert('Informe a descrição e selecione o arquivo.');
-                return;
-            }
+            if (!desc || fileInput.files.length === 0) { alert('Informe a descrição e selecione o arquivo.'); return; }
             const file = fileInput.files[0];
             const reader = new FileReader();
             reader.onload = function(e) {
-                currentProjectDocs.push({
-                    desc: desc,
-                    fileName: file.name,
-                    fileData: e.target.result
-                });
+                currentProjectDocs.push({ desc: desc, fileName: file.name, fileData: e.target.result });
                 document.getElementById('projDocDescInput').value = '';
                 fileInput.value = '';
                 renderProjectDocsList();
@@ -1480,13 +1571,9 @@
         function saveProject(e) {
             e.preventDefault();
             const idx = document.getElementById('projId').value;
-            
             const selectedTeams = [];
-            document.querySelectorAll('input[name="projTeamCheckbox"]:checked').forEach(cb => {
-                selectedTeams.push(cb.value);
-            });
+            document.querySelectorAll('input[name="projTeamCheckbox"]:checked').forEach(cb => selectedTeams.push(cb.value));
             selectedTeams.sort();
-
             const scheduleStr = document.getElementById('projSchedule').value;
             const statusAuto = calculateAutomaticStatus(scheduleStr, 'Em Andamento');
 
@@ -1505,11 +1592,7 @@
                 docs: currentProjectDocs
             };
 
-            if (idx !== '') {
-                appData.projects[idx] = item;
-            } else {
-                appData.projects.push(item);
-            }
+            if (idx !== '') { appData.projects[idx] = item; } else { appData.projects.push(item); }
             closeProjectModal();
             refreshAllViews();
         }
@@ -1522,6 +1605,233 @@
             }
         }
 
+        // --- GESTÃO DE MOC (Management of Change) ---
+        function renderMocs() {
+            const container = document.getElementById('mocContainer');
+            if (!container) return;
+
+            if (!appData.moc || appData.moc.length === 0) {
+                container.innerHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border text-center text-slate-500">Nenhum MoC cadastrado. Clique em "Novo MoC" para iniciar.</div>`;
+                return;
+            }
+
+            container.innerHTML = appData.moc.map((m, idx) => {
+                m.status = calculateAutomaticStatus(m.schedule, m.status);
+                let calculatedProgress = m.progress || 0;
+                if (m.actions && m.actions.length > 0) {
+                    const completedActions = m.actions.filter(a => a.status === 'Concluído').length;
+                    calculatedProgress = Math.round((completedActions / m.actions.length) * 100);
+                    m.progress = calculatedProgress;
+                }
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b pb-4">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-brand-light text-brand text-xs font-bold px-2.5 py-1 rounded">${m.system}</span>
+                                    <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded">Prioridade: ${m.priority}</span>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-900 mt-1">${m.name}</h3>
+                                <p class="text-xs text-slate-600 mt-0.5">${m.desc}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                ${getStatusBadge(m.schedule, m.status)}
+                                <button onclick="editMoc(${idx})" class="p-2 text-slate-500 hover:text-brand" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteMoc(${idx})" class="p-2 text-slate-500 hover:text-red-600" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div><strong class="text-slate-700">Escopo:</strong> ${m.scope || '-'}</div>
+                            <div><strong class="text-slate-700">Equipes:</strong> ${m.teams ? m.teams.join(', ') : '-'}</div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Evolução Curva S (Calculada pelas Ações)</span>
+                                <span>${calculatedProgress}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-brand h-2.5 rounded-full transition-all duration-500" style="width: ${calculatedProgress}%"></div>
+                            </div>
+                        </div>
+                        ${m.actions && m.actions.length > 0 ? `
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-list-check mr-1 text-brand"></i> Plano de Ação (Fases do MoC)</h4>
+                                <div class="space-y-1.5">
+                                    ${m.actions.map((act, actIdx) => `
+                                        <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                            <div class="flex items-center space-x-2">
+                                                <input type="checkbox" ${act.status==='Concluído'?'checked':''} onchange="toggleMocActionDone(${idx}, ${actIdx})" class="w-4 h-4 text-brand rounded">
+                                                <span class="${act.status==='Concluído'?'line-through text-slate-400 font-medium':'text-slate-800 font-medium'}">${act.desc}</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 space-x-2">
+                                                <span>Resp: <strong>${act.resp || '-'}</strong></span>
+                                                <span>Prazo: ${act.prazo ? act.prazo.split('-').reverse().join('/') : '-'}</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        ${m.docs && m.docs.length > 0 ? `
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                <h4 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-brand"></i> Documentação Vinculada</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    ${m.docs.map(d => `
+                                        <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                                            <div class="truncate mr-2">
+                                                <span class="font-semibold text-slate-800 block">${d.desc}</span>
+                                                <a href="${d.fileData}" download="${d.fileName}" class="text-brand hover:underline text-[11px]"><i class="fa-solid fa-download mr-1"></i>${d.fileName}</a>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openModalMoc(idx = null) {
+            document.getElementById('mocModal').classList.remove('hidden');
+            currentMocDocs = [];
+            currentMocActions = [];
+            renderMocDocsList();
+            renderMocActionsList();
+            document.querySelectorAll('input[name="mocTeamCheckbox"]').forEach(cb => cb.checked = false);
+
+            if (idx !== null) {
+                const m = appData.moc[idx];
+                document.getElementById('mocId').value = idx;
+                document.getElementById('mocName').value = m.name;
+                document.getElementById('mocSystem').value = m.system;
+                document.getElementById('mocDesc').value = m.desc;
+                document.getElementById('mocScope').value = m.scope;
+                document.getElementById('mocSchedule').value = m.schedule;
+                document.getElementById('mocPriority').value = m.priority;
+                
+                if (m.teams && Array.isArray(m.teams)) {
+                    document.querySelectorAll('input[name="mocTeamCheckbox"]').forEach(cb => {
+                        if (m.teams.includes(cb.value)) cb.checked = true;
+                    });
+                }
+                currentMocDocs = m.docs ? [...m.docs] : [];
+                currentMocActions = m.actions ? [...m.actions] : [];
+                renderMocDocsList();
+                renderMocActionsList();
+                document.getElementById('mocModalTitle').innerText = 'Editar MoC';
+            } else {
+                document.getElementById('mocForm').reset();
+                document.getElementById('mocId').value = '';
+                document.getElementById('mocModalTitle').innerText = 'Novo MoC';
+            }
+        }
+
+        function closeMocModal() { document.getElementById('mocModal').classList.add('hidden'); }
+
+        function addMocAction() {
+            const desc = document.getElementById('mocActionDesc').value;
+            const resp = document.getElementById('mocActionResp').value;
+            const prazo = document.getElementById('mocActionPrazo').value;
+            if (!desc || !prazo) { alert('Preencha a descrição e o prazo da ação.'); return; }
+            currentMocActions.push({ desc: desc, resp: resp, prazo: prazo, status: 'Em Andamento' });
+            document.getElementById('mocActionDesc').value = '';
+            document.getElementById('mocActionResp').value = '';
+            document.getElementById('mocActionPrazo').value = '';
+            renderMocActionsList();
+        }
+
+        function renderMocActionsList() {
+            const list = document.getElementById('mocActionsList');
+            if (!list) return;
+            list.innerHTML = currentMocActions.map((act, i) => `
+                <div class="flex items-center justify-between bg-white p-2 rounded border text-xs">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" ${act.status==='Concluído'?'checked':''} onchange="toggleModalMocAction(${i})" class="w-4 h-4 text-brand rounded">
+                        <span class="${act.status==='Concluído'?'line-through text-slate-400 font-medium':'text-slate-800 font-medium'}">${act.desc} (${act.resp || 'Sem resp'} - ${act.prazo ? act.prazo.split('-').reverse().join('/') : ''})</span>
+                    </div>
+                    <button type="button" onclick="currentMocActions.splice(${i},1);renderMocActionsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function toggleModalMocAction(i) {
+            currentMocActions[i].status = currentMocActions[i].status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            renderMocActionsList();
+        }
+
+        function toggleMocActionDone(mocIdx, actIdx) {
+            const act = appData.moc[mocIdx].actions[actIdx];
+            act.status = act.status === 'Concluído' ? 'Em Andamento' : 'Concluído';
+            refreshAllViews();
+        }
+
+        function addMocDoc() {
+            const desc = document.getElementById('mocDocDescInput').value;
+            const fileInput = document.getElementById('mocDocFileInput');
+            if (!desc || fileInput.files.length === 0) { alert('Informe a descrição e selecione o arquivo.'); return; }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentMocDocs.push({ desc: desc, fileName: file.name, fileData: e.target.result });
+                document.getElementById('mocDocDescInput').value = '';
+                fileInput.value = '';
+                renderMocDocsList();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderMocDocsList() {
+            const list = document.getElementById('mocDocsList');
+            if (!list) return;
+            list.innerHTML = currentMocDocs.map((d, i) => `
+                <div class="flex items-center justify-between bg-white p-1.5 rounded border">
+                    <span class="truncate"><strong>${d.desc}:</strong> ${d.fileName}</span>
+                    <button type="button" onclick="currentMocDocs.splice(${i},1);renderMocDocsList()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function saveMoc(e) {
+            e.preventDefault();
+            const idx = document.getElementById('mocId').value;
+            const selectedTeams = [];
+            document.querySelectorAll('input[name="mocTeamCheckbox"]:checked').forEach(cb => selectedTeams.push(cb.value));
+            selectedTeams.sort();
+            const scheduleStr = document.getElementById('mocSchedule').value;
+            const statusAuto = calculateAutomaticStatus(scheduleStr, 'Em Andamento');
+
+            if (!appData.moc) appData.moc = [];
+
+            const item = {
+                name: document.getElementById('mocName').value,
+                system: document.getElementById('mocSystem').value,
+                desc: document.getElementById('mocDesc').value,
+                scope: document.getElementById('mocScope').value,
+                teams: selectedTeams,
+                schedule: scheduleStr,
+                priority: document.getElementById('mocPriority').value,
+                progress: 0,
+                status: statusAuto,
+                actions: currentMocActions,
+                docs: currentMocDocs
+            };
+
+            if (idx !== '') { appData.moc[idx] = item; } else { appData.moc.push(item); }
+            closeMocModal();
+            refreshAllViews();
+        }
+
+        function editMoc(idx) { openModalMoc(idx); }
+        function deleteMoc(idx) {
+            if (confirm('Deseja realmente excluir este MoC?')) {
+                appData.moc.splice(idx, 1);
+                refreshAllViews();
+            }
+        }
+
+        // --- TABELAS GENÉRICAS (COM MAPEAMENTO DA ORIGEM) ---
         function renderGenericTable(mod) {
             const tbody = document.getElementById({
                 'demandas_dia': 'tableDemandasDia',
@@ -1535,7 +1845,14 @@
             if (!tbody) return;
             
             if (!appData[mod]) appData[mod] = [];
-            let items = mod === 'demandas_dia' ? getVirtualDailyDemands() : appData[mod];
+            
+            // Atrela a origem de cada item para evitar perdas ou erros de edição
+            let items = [];
+            if (mod === 'demandas_dia') {
+                items = getVirtualDailyDemands();
+            } else {
+                items = appData[mod].map((it, i) => ({ ...it, _originalMod: mod, _originalIdx: i }));
+            }
             
             const selectedFilters = getSelectedFilterStatus(mod);
             const labelEl = document.getElementById(`filter-label-${mod}`);
@@ -1559,9 +1876,12 @@
                 return;
             }
 
-            tbody.innerHTML = items.map((item, idx) => {
+            tbody.innerHTML = items.map((item) => {
+                const origMod = item._originalMod;
+                const origIdx = item._originalIdx;
                 item.status = calculateAutomaticStatus(item.prazo, item.status);
 
+                // O layout da TR é definido pela tabela onde ela é renderizada (mod), e não de onde veio
                 if (mod === 'melhorias') {
                     let diasCorridos = '-';
                     if (item.dataSolicitacao) {
@@ -1575,7 +1895,7 @@
 
                     return `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${origIdx}" data-mod="${origMod}"></td>
                             <td class="p-3">
                                 ${getStatusBadge(item.prazo, item.status)}
                                 <div class="text-[11px] text-slate-500 mt-1"><i class="fa-regular fa-clock mr-1"></i> ${diasCorridos}</div>
@@ -1590,9 +1910,9 @@
                             </td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
-                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100" title="Marcar Concluído"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="toggleItemDone('${origMod}', ${origIdx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100" title="Marcar Concluído"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${origMod}', ${origIdx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${origMod}', ${origIdx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100" title="Excluir"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1601,15 +1921,15 @@
                 if (mod === 'cpia') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${origIdx}" data-mod="${origMod}"></td>
                             <td class="p-3 font-bold text-slate-800">${item.idCpia || '-'}</td>
                             <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
                             <td class="p-3 text-slate-800">${item.descricao}</td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
-                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="toggleItemDone('${origMod}', ${origIdx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${origMod}', ${origIdx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${origMod}', ${origIdx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1618,15 +1938,15 @@
                 if (mod === 'analise_falha') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${origIdx}" data-mod="${origMod}"></td>
                             <td class="p-3 font-bold text-slate-800">AF-${item.refAf || '-'}</td>
                             <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
                             <td class="p-3 text-slate-800">${item.descricao}</td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
-                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="toggleItemDone('${origMod}', ${origIdx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${origMod}', ${origIdx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${origMod}', ${origIdx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1635,7 +1955,7 @@
                 if (mod === 'documentacao') {
                     return `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
+                            <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${origIdx}" data-mod="${origMod}"></td>
                             <td class="p-3">
                                 <span class="font-bold text-brand block">${item.tipoAcao || 'Criação'}</span>
                                 <span class="text-slate-500">${item.tipoDoc || ''}</span>
@@ -1647,9 +1967,9 @@
                             </td>
                             <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                             <td class="p-3 text-center space-x-2">
-                                <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                                <button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="toggleItemDone('${origMod}', ${origIdx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="openModalItem('${origMod}', ${origIdx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${origMod}', ${origIdx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1657,15 +1977,18 @@
 
                 return `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${idx}"></td>
-                        <td class="p-3">${getStatusBadge(item.prazo, item.status)}</td>
+                        <td class="p-3 text-center"><input type="checkbox" class="row-select-${mod} rounded" value="${origIdx}" data-mod="${origMod}"></td>
+                        <td class="p-3">
+                            ${getStatusBadge(item.prazo, item.status)}
+                            ${origMod !== 'demandas_dia' && mod === 'demandas_dia' ? `<div class="text-[10px] text-brand font-bold mt-1 uppercase">Origem: ${origMod.replace('_', ' ')}</div>` : ''}
+                        </td>
                         <td class="p-3 text-slate-800">${item.descricao}</td>
                         <td class="p-3"><span class="bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">${item.categoria || 'Geral'}</span></td>
                         <td class="p-3">${renderAttachmentsCell(item.anexos)}</td>
                         <td class="p-3 text-center space-x-2">
-                            <button onclick="toggleItemDone('${mod}', ${idx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
-                            <button onclick="openModalItem('${mod}',${idx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteItem('${mod}', ${idx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="toggleItemDone('${origMod}', ${origIdx})" class="p-1.5 bg-emerald-50 text-emerald-600 rounded hover:bg-emerald-100"><i class="fa-solid fa-check"></i></button>
+                            <button onclick="openModalItem('${origMod}', ${origIdx})" class="p-1.5 bg-slate-100 text-slate-600 rounded hover:bg-slate-200"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteItem('${origMod}', ${origIdx})" class="p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -1685,10 +2008,20 @@
             }
 
             if (confirm(`Deseja realmente excluir os ${checkboxes.length} itens selecionados?`)) {
-                const indices = Array.from(checkboxes).map(cb => parseInt(cb.value)).sort((a,b) => b - a);
-                indices.forEach(idx => {
-                    appData[mod].splice(idx, 1);
+                let toDelete = {};
+                checkboxes.forEach(cb => {
+                    const m = cb.getAttribute('data-mod') || mod;
+                    const id = parseInt(cb.value);
+                    if(!toDelete[m]) toDelete[m] = [];
+                    toDelete[m].push(id);
                 });
+                
+                // Exclusão segura de trás pra frente
+                for(let m in toDelete) {
+                    toDelete[m].sort((a,b) => b - a).forEach(id => {
+                        appData[m].splice(id, 1);
+                    });
+                }
                 refreshAllViews();
             }
         }
@@ -2309,6 +2642,7 @@
                 if (data && data.data) {
                     appData = data.data;
                     if (!appData.anotacoes) appData.anotacoes = [];
+                    if (!appData.moc) appData.moc = [];
                 } else {
                     loadFromLocalStorage();
                 }
@@ -2324,6 +2658,7 @@
                 try {
                     appData = JSON.parse(saved);
                     if (!appData.anotacoes) appData.anotacoes = [];
+                    if (!appData.moc) appData.moc = [];
                 } catch (e) {
                     console.error('Erro ao carregar dados locais', e);
                 }
